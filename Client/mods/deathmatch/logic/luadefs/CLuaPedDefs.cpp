@@ -53,6 +53,7 @@ void CLuaPedDefs::LoadFunctions()
         {"setPedLookAt", SetPedLookAt},
         {"setPedHeadless", SetPedHeadless},
         {"setPedFrozen", SetPedFrozen},
+        {"setPedAutoReloadEnabled", SetPedAutoReloadEnabled},
         {"setPedFootBloodEnabled", SetPedFootBloodEnabled},
         {"setPedCameraRotation", SetPedCameraRotation},
         {"setPedAimTarget", SetPedAimTarget},
@@ -117,6 +118,7 @@ void CLuaPedDefs::LoadFunctions()
         {"isPedDucked", IsPedDucked},
         {"isPedDead", IsPedDead},
         {"isPedReloadingWeapon", ArgumentParserWarn<false, IsPedReloadingWeapon>},
+        {"isPedAutoReloadEnabled", ArgumentParserWarn<false, IsPedAutoReloadEnabled>},
         {"killPedTask", ArgumentParser<killPedTask>},
     };
 
@@ -245,6 +247,7 @@ void CLuaPedDefs::AddClass(lua_State* luaVM)
     lua_classvariable(luaVM, "weaponSlot", "setPedWeaponSlot", "getPedWeaponSlot");
     lua_classvariable(luaVM, "walkingStyle", "setPedWalkingStyle", "getPedWalkingStyle");
     lua_classvariable(luaVM, "reloadingWeapon", nullptr, "isPedReloadingWeapon");
+    lua_classvariable(luaVM, "autoReloadEnabled", "setPedAutoReloadEnabled", "isPedAutoReloadEnabled");
 
     lua_registerclass(luaVM, "Ped", "Element");
 }
@@ -1260,6 +1263,29 @@ bool CLuaPedDefs::IsPedReloadingWeapon(CClientPed* const ped) noexcept
 {
     return ped->IsReloadingWeapon();
 }
+
+int CLuaPedDefs::IsPedAutoReloadEnabled(lua_State* luaVM)
+{
+    CClientPed* pPed = nullptr;
+
+    CScriptArgReader argStream(luaVM);
+    argStream.ReadUserData(pPed);
+
+    if (!argStream.HasErrors())
+    {
+        bool enabled;
+        if (CStaticFunctionDefinitions::IsPedAutoReloadEnabled(*pPed, enabled))
+        {
+            lua_pushboolean(luaVM, enabled);
+            return 1;
+        }
+    }
+    else
+        m_pScriptDebugging->LogCustom(luaVM, argStream.GetFullErrorMessage());
+
+    lua_pushboolean(luaVM, false);
+    return 1;
+}
   
 int CLuaPedDefs::GetPedClothes(lua_State* luaVM)
 {
@@ -2005,6 +2031,29 @@ int CLuaPedDefs::SetPedFrozen(lua_State* luaVM)
     if (!argStream.HasErrors())
     {
         if (CStaticFunctionDefinitions::SetPedFrozen(*pEntity, bFrozen))
+        {
+            lua_pushboolean(luaVM, true);
+            return 1;
+        }
+    }
+    else
+        m_pScriptDebugging->LogCustom(luaVM, argStream.GetFullErrorMessage());
+
+    lua_pushboolean(luaVM, false);
+    return 1;
+}
+
+int CLuaPedDefs::SetPedAutoReloadEnabled(lua_State* luaVM)
+{
+    CClientEntity*   pEntity = nullptr;
+    bool             enabled = true;
+    CScriptArgReader argStream(luaVM);
+    argStream.ReadUserData(pEntity);
+    argStream.ReadBool(enabled);
+
+    if (!argStream.HasErrors())
+    {
+        if (CStaticFunctionDefinitions::SetPedAutoReloadEnabled(*pEntity, enabled))
         {
             lua_pushboolean(luaVM, true);
             return 1;

@@ -45,6 +45,7 @@ void CLuaPedDefs::LoadFunctions()
         {"isPedOnFire", IsPedOnFire},
         {"isPedHeadless", IsPedHeadless},
         {"isPedFrozen", IsPedFrozen},
+        {"isPedAutoReloadEnabled", IsPedAutoReloadEnabled},
         {"getPedOccupiedVehicle", GetPedOccupiedVehicle},
         {"getPedOccupiedVehicleSeat", GetPedOccupiedVehicleSeat},
         {"isPedInVehicle", IsPedInVehicle},
@@ -72,6 +73,7 @@ void CLuaPedDefs::LoadFunctions()
         {"setPedOnFire", SetPedOnFire},
         {"setPedHeadless", SetPedHeadless},
         {"setPedFrozen", SetPedFrozen},
+        {"setPedAutoReloadEnabled", SetPedAutoReloadEnabled},
         {"reloadPedWeapon", ArgumentParserWarn<false, ReloadPedWeapon>},
 
         // Weapon give/take functions
@@ -120,6 +122,7 @@ void CLuaPedDefs::AddClass(lua_State* luaVM)
     lua_classfunction(luaVM, "isHeadless", "isPedHeadless");
     lua_classfunction(luaVM, "isWearingJetpack", "isPedWearingJetpack");            // introduced in 1.5.5-9.13846
     lua_classfunction(luaVM, "isReloadingWeapon", "isPedReloadingWeapon");
+    lua_classfunction(luaVM, "isAutoReloadEnabled", "isPedAutoReloadEnabled");
 
     lua_classfunction(luaVM, "getArmor", "getPedArmor");
     lua_classfunction(luaVM, "getFightingStyle", "getPedFightingStyle");
@@ -172,6 +175,7 @@ void CLuaPedDefs::AddClass(lua_State* luaVM)
     lua_classvariable(luaVM, "walkingStyle", "setPedWalkingStyle", "getPedWalkingStyle");
     lua_classvariable(luaVM, "jetpack", "setPedWearingJetpack", "isPedWearingJetpack");            // introduced in 1.5.5-9.13846
     lua_classvariable(luaVM, "reloadingWeapon", nullptr, "isPedReloadingWeapon");
+    lua_classvariable(luaVM, "autoReloadEnabled", "setPedAutoReloadEnabled", "isPedAutoReloadEnabled");
 
     // TODO(qaisjp): setting this to any value will kill the ped. add OOP_KillPed that only allows `true`.
     lua_classvariable(luaVM, "dead", "killPed", "isPedDead");
@@ -301,6 +305,29 @@ bool CLuaPedDefs::ReloadPedWeapon(lua_State* vm, CPed* const ped) noexcept
 bool CLuaPedDefs::IsPedReloadingWeapon(CPed* const ped) noexcept
 {
     return ped->IsReloadingWeapon();
+}
+
+int CLuaPedDefs::IsPedAutoReloadEnabled(lua_State* luaVM)
+{
+    CPed* pPed;
+
+    CScriptArgReader argStream(luaVM);
+    argStream.ReadUserData(pPed);
+
+    if (!argStream.HasErrors())
+    {
+        bool enabled;
+        if (CStaticFunctionDefinitions::IsPedAutoReloadEnabled(pPed, enabled))
+        {
+            lua_pushboolean(luaVM, enabled);
+            return 1;
+        }
+    }
+    else
+        m_pScriptDebugging->LogCustom(luaVM, argStream.GetFullErrorMessage());
+
+    lua_pushboolean(luaVM, false);
+    return 1;
 }
 
 int CLuaPedDefs::IsPedDoingGangDriveby(lua_State* luaVM)
@@ -572,6 +599,32 @@ int CLuaPedDefs::SetPedFrozen(lua_State* luaVM)
         LogWarningIfPlayerHasNotJoinedYet(luaVM, pElement);
 
         if (CStaticFunctionDefinitions::SetPedFrozen(pElement, bFrozen))
+        {
+            lua_pushboolean(luaVM, true);
+            return 1;
+        }
+    }
+    else
+        m_pScriptDebugging->LogCustom(luaVM, argStream.GetFullErrorMessage());
+
+    lua_pushboolean(luaVM, false);
+    return 1;
+}
+
+int CLuaPedDefs::SetPedAutoReloadEnabled(lua_State* luaVM)
+{
+    CElement* pElement;
+    bool      enabled;
+
+    CScriptArgReader argStream(luaVM);
+    argStream.ReadUserData(pElement);
+    argStream.ReadBool(enabled);
+
+    if (!argStream.HasErrors())
+    {
+        LogWarningIfPlayerHasNotJoinedYet(luaVM, pElement);
+
+        if (CStaticFunctionDefinitions::SetPedAutoReloadEnabled(pElement, enabled))
         {
             lua_pushboolean(luaVM, true);
             return 1;

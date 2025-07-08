@@ -36,6 +36,7 @@ void CPedRPCs::LoadFunctions()
     AddHandler(SET_PED_ON_FIRE, SetPedOnFire, "SetPedOnFire");
     AddHandler(SET_PED_HEADLESS, SetPedHeadless, "SetPedHeadless");
     AddHandler(SET_PED_FROZEN, SetPedFrozen, "SetPedFrozen");
+    AddHandler(SET_PED_AUTO_RELOAD_ENABLED, SetPedAutoReloadEnabled, "SetPedAutoReloadEnabled");
     AddHandler(RELOAD_PED_WEAPON, ReloadPedWeapon, "ReloadPedWeapon");
 }
 
@@ -381,6 +382,20 @@ void CPedRPCs::SetPedFrozen(CClientEntity* pSource, NetBitStreamInterface& bitSt
         if (pPed)
         {
             pPed->SetFrozen(bIsFrozen);
+        }
+    }
+}
+
+void CPedRPCs::SetPedAutoReloadEnabled(CClientEntity* pSource, NetBitStreamInterface& bitStream)
+{
+    bool enabled = true;
+
+    if (bitStream.ReadBit(enabled))
+    {
+        CClientPed* pPed = m_pPedManager->Get(pSource->GetID(), true);
+        if (pPed)
+        {
+            pPed->SetAutoReloadEnabled(enabled);
         }
     }
 }

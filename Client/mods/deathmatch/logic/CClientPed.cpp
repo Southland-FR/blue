@@ -197,6 +197,7 @@ void CClientPed::Init(CClientManager* pManager, unsigned long ulModelID, bool bI
     m_LastSyncedData = new SLastSyncedPedData;
     m_bSpeechEnabled = true;
     m_bStealthAiming = false;
+    m_bAutoReloadEnabled = true;
     m_fLighting = 0.0f;
     m_bBulletImpactData = false;
     m_ucEnteringDoor = 0xFF;
@@ -6080,6 +6081,16 @@ bool CClientPed::IsReloadingWeapon() noexcept
 {
     auto* weapon = GetWeapon();
     return weapon && weapon->GetState() == WEAPONSTATE_RELOADING;
+}
+
+bool CClientPed::IsAutoReloadEnabled() const noexcept
+{
+    return m_bAutoReloadEnabled;
+}
+
+void CClientPed::SetAutoReloadEnabled(bool enabled) noexcept
+{
+    m_bAutoReloadEnabled = enabled;
 }
 
 bool CClientPed::ShouldBeStealthAiming()
