@@ -1829,12 +1829,6 @@ bool CStaticFunctionDefinitions::IsPedFrozen(CClientPed& Ped, bool& bFrozen)
     return true;
 }
 
-bool CStaticFunctionDefinitions::IsPedAutoReloadEnabled(CClientPed& Ped, bool& enabled)
-{
-    enabled = Ped.IsAutoReloadEnabled();
-    return true;
-}
-
 bool CStaticFunctionDefinitions::IsPedFootBloodEnabled(CClientPed& Ped, bool& bHasFootBlood)
 {
     bHasFootBlood = Ped.IsFootBloodEnabled();
@@ -2442,18 +2436,6 @@ bool CStaticFunctionDefinitions::SetPedFrozen(CClientEntity& Entity, bool bFroze
     {
         CClientPed& Ped = static_cast<CClientPed&>(Entity);
         Ped.SetFrozen(bFrozen);
-        return true;
-    }
-    return false;
-}
-
-bool CStaticFunctionDefinitions::SetPedAutoReloadEnabled(CClientEntity& Entity, bool enabled)
-{
-    RUN_CHILDREN(SetPedAutoReloadEnabled(**iter, enabled))
-    if (IS_PED(&Entity))
-    {
-        CClientPed& Ped = static_cast<CClientPed&>(Entity);
-        Ped.SetAutoReloadEnabled(enabled);
         return true;
     }
     return false;

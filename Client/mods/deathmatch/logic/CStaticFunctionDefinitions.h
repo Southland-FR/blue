@@ -149,7 +149,6 @@ public:
     static bool           GetPedMoveState(CClientPed& Ped, std::string& strMoveState);
     static bool           IsPedHeadless(CClientPed& Ped, bool& bHeadless);
     static bool           IsPedFrozen(CClientPed& Ped, bool& bFrozen);
-    static bool           IsPedAutoReloadEnabled(CClientPed& Ped, bool& enabled);
     static bool           GetPedOccupiedVehicleSeat(CClientPed& Ped, uint& uiSeat);
     static bool           IsPedFootBloodEnabled(CClientPed& Ped, bool& bHasFootBlood);
     static bool           GetPedCameraRotation(CClientPed& Ped, float& fRotation);
@@ -186,7 +185,6 @@ public:
     static bool SetPedLookAt(CClientEntity& Entity, CVector& vecPosition, int iTime, int iBlend, CClientEntity* pTarget);
     static bool SetPedHeadless(CClientEntity& Entity, bool bHeadless);
     static bool SetPedFrozen(CClientEntity& Entity, bool bFrozen);
-    static bool SetPedAutoReloadEnabled(CClientEntity& Entity, bool enabled);
     static bool SetPedFootBloodEnabled(CClientEntity& Entity, bool bHasFootBlood);
     static bool SetPedCameraRotation(CClientEntity& Entity, float fRotation);
     static bool SetPedAimTarget(CClientEntity& Entity, CVector& vecTarget);

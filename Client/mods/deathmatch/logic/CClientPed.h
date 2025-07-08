@@ -500,8 +500,6 @@ public:
     bool CanReloadWeapon() noexcept;
     bool ReloadWeapon() noexcept;
     bool IsReloadingWeapon() noexcept;
-    bool IsAutoReloadEnabled() const noexcept { return m_bAutoReloadEnabled; }
-    void SetAutoReloadEnabled(bool enabled) noexcept { m_bAutoReloadEnabled = enabled; }
 
     bool ShouldBeStealthAiming();
     bool IsStealthAiming() { return m_bStealthAiming; }
@@ -724,7 +722,6 @@ public:
     SLastSyncedPedData*                      m_LastSyncedData;
     bool                                     m_bSpeechEnabled;
     bool                                     m_bStealthAiming;
-    bool                                     m_bAutoReloadEnabled{true};
     float                                    m_fLighting;
     unsigned char                            m_ucEnteringDoor;
     unsigned char                            m_ucLeavingDoor;

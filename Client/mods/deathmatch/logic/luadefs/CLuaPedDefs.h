@@ -94,7 +94,6 @@ public:
     LUA_DECLARE(SetPedWeaponSlot);
     LUA_DECLARE(GivePedWeapon);
     static bool IsPedReloadingWeapon(CClientPed* const ped) noexcept;
-    LUA_DECLARE(IsPedAutoReloadEnabled);
     LUA_DECLARE(AddPedClothes);
     LUA_DECLARE(RemovePedClothes);
     static bool SetPedControlState(std::variant<CClientPed*, std::string> first, std::variant<std::string, bool> second,
@@ -105,7 +104,6 @@ public:
     LUA_DECLARE(SetPedLookAt);
     LUA_DECLARE(SetPedHeadless);
     LUA_DECLARE(SetPedFrozen);
-    LUA_DECLARE(SetPedAutoReloadEnabled);
     LUA_DECLARE(SetPedFootBloodEnabled);
     LUA_DECLARE(SetPedCameraRotation);
     LUA_DECLARE(SetPedAimTarget);

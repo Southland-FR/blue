@@ -3721,14 +3721,6 @@ bool CStaticFunctionDefinitions::IsPedFrozen(CPed* pPed, bool& bIsFrozen)
     return true;
 }
 
-bool CStaticFunctionDefinitions::IsPedAutoReloadEnabled(CPed* pPed, bool& bEnabled)
-{
-    assert(pPed);
-
-    bEnabled = pPed->IsAutoReloadEnabled();
-    return true;
-}
-
 // ************** PED SET FUNCS ************** //
 bool CStaticFunctionDefinitions::SetPedArmor(CElement* pElement, float armor)
 {
@@ -4555,26 +4547,6 @@ bool CStaticFunctionDefinitions::SetPedFrozen(CElement* pElement, bool bIsFrozen
 
         BitStream.pBitStream->WriteBit(bIsFrozen);
         m_pPlayerManager->BroadcastOnlyJoined(CElementRPCPacket(pPed, SET_PED_FROZEN, *BitStream.pBitStream));
-
-        return true;
-    }
-    return false;
-}
-
-bool CStaticFunctionDefinitions::SetPedAutoReloadEnabled(CElement* pElement, bool bEnabled)
-{
-    assert(pElement);
-    RUN_CHILDREN(SetPedAutoReloadEnabled(*iter, bEnabled))
-
-    if (IS_PED(pElement))
-    {
-        CBitStream BitStream;
-        CPed*      pPed = static_cast<CPed*>(pElement);
-
-        pPed->SetAutoReloadEnabled(bEnabled);
-
-        BitStream.pBitStream->WriteBit(bEnabled);
-        m_pPlayerManager->BroadcastOnlyJoined(CElementRPCPacket(pPed, SET_PED_AUTO_RELOAD_ENABLED, *BitStream.pBitStream));
 
         return true;
     }

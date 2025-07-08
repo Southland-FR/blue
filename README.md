@@ -122,13 +122,6 @@ docker run --rm -v `pwd`:/build ghcr.io/multitheftauto/mtasa-blue-build:latest -
 
 Execute `win-create-projects.bat`
 
-### Lua API additions
-
-The following functions allow control over a ped's automatic weapon reload:
-
-- `setPedAutoReloadEnabled(ped, enabled)` – enable or disable automatic reloading.
-- `isPedAutoReloadEnabled(ped)` – query the current auto reload state.
-
 ## License
 
 Unless otherwise specified, all source code hosted on this repository is licensed under the GPLv3 license. See the [LICENSE](./LICENSE) file for more details.

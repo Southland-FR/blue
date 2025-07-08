@@ -292,9 +292,6 @@ public:
     bool IsReloadingWeapon() const noexcept { return m_reloadingWeapon; }
     void SetReloadingWeapon(bool state) noexcept { m_reloadingWeapon = state; }
 
-    bool IsAutoReloadEnabled() const noexcept { return m_bAutoReloadEnabled; }
-    void SetAutoReloadEnabled(bool state) noexcept { m_bAutoReloadEnabled = state; }
-
     bool GetCollisionEnabled() { return m_bCollisionsEnabled; }
     void SetCollisionEnabled(bool bCollisionEnabled) { m_bCollisionsEnabled = bCollisionEnabled; }
 
@@ -350,7 +347,6 @@ protected:
     bool                                 m_bFrozen;
     bool                                 m_bStealthAiming;
     bool                                 m_reloadingWeapon{};
-    bool                                 m_bAutoReloadEnabled{true};
     CVehicle*                            m_pJackingVehicle;
     SPlayerAnimData                      m_animData{};
     float                                m_cameraRotation{};

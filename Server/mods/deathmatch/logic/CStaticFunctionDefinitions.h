@@ -181,7 +181,6 @@ public:
     static bool      IsPedOnFire(CPed* pPed, bool& bIsOnFire);
     static bool      IsPedHeadless(CPed* pPed, bool& bIsHeadless);
     static bool      IsPedFrozen(CPed* pPed, bool& bIsFrozen);
-    static bool      IsPedAutoReloadEnabled(CPed* pPed, bool& bEnabled);
     static CVehicle* GetPedOccupiedVehicle(CPed* pPed);
     static bool      GetPedOccupiedVehicleSeat(CPed* pPed, unsigned int& uiSeat);
     static bool      GetWeaponProperty(eWeaponProperty eProperty, eWeaponType eWeapon, eWeaponSkill eSkillLevel, float& fData);
@@ -219,7 +218,6 @@ public:
     static bool SetPedOnFire(CElement* pElement, bool bIsOnFire);
     static bool SetPedHeadless(CElement* pElement, bool bIsHeadless);
     static bool SetPedFrozen(CElement* pElement, bool bIsFrozen);
-    static bool SetPedAutoReloadEnabled(CElement* pElement, bool bEnabled);
     static bool ReloadPedWeapon(CElement* pElement) noexcept;
     static bool SetWeaponProperty(eWeaponProperty eProperty, eWeaponType eWeapon, eWeaponSkill eSkillLevel, float fData);
     static bool SetWeaponProperty(eWeaponProperty eProperty, eWeaponType eWeapon, eWeaponSkill eSkillLevel, int sData);
