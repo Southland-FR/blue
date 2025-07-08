@@ -50,6 +50,6 @@ msgid "Quit"
 msgstr "Esci"
 
 #. Found in the main menu above the news listing
-msgid "The Latest News"
+msgid "Jeun test"
 msgstr "Ultime Notizie"
 
