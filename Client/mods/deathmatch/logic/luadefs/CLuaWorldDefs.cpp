@@ -116,6 +116,8 @@ void CLuaWorldDefs::LoadFunctions()
 
                                                                              // World create funcs
                                                                              {"createSWATRope", CreateSWATRope},
+                                                                             {"createCullZone", CreateCullZone},
+                                                                             {"removeCullZone", RemoveCullZone},
                                                                              {"createExplosion", CreateExplosion},
 
                                                                              // World reset funcs
@@ -2031,6 +2033,59 @@ int CLuaWorldDefs::GetFPSLimit(lua_State* luaVM)
         lua_pushnumber(luaVM, iLimit);
         return 1;
     }
+
+    lua_pushboolean(luaVM, false);
+    return 1;
+}
+
+int CLuaWorldDefs::CreateCullZone(lua_State* luaVM)
+{
+    CScriptArgReader argStream(luaVM);
+
+    float cx, cy, cz, unk, length, bottom, width, top;
+    unsigned int flags;
+    argStream.ReadNumber(cx);
+    argStream.ReadNumber(cy);
+    argStream.ReadNumber(cz);
+    argStream.ReadNumber(unk, 0.0f);
+    argStream.ReadNumber(length);
+    argStream.ReadNumber(bottom);
+    argStream.ReadNumber(width);
+    argStream.ReadNumber(top);
+    argStream.ReadNumber(flags);
+
+    if (!argStream.HasErrors())
+    {
+        int id = CStaticFunctionDefinitions::CreateCullZone(cx, cy, cz, length, bottom, width, top, flags);
+        if (id != -1)
+        {
+            lua_pushnumber(luaVM, id);
+            return 1;
+        }
+    }
+    else
+        m_pScriptDebugging->LogCustom(luaVM, argStream.GetFullErrorMessage());
+
+    lua_pushboolean(luaVM, false);
+    return 1;
+}
+
+int CLuaWorldDefs::RemoveCullZone(lua_State* luaVM)
+{
+    CScriptArgReader argStream(luaVM);
+    int id;
+    argStream.ReadNumber(id);
+
+    if (!argStream.HasErrors())
+    {
+        if (CStaticFunctionDefinitions::RemoveCullZone(id))
+        {
+            lua_pushboolean(luaVM, true);
+            return 1;
+        }
+    }
+    else
+        m_pScriptDebugging->LogCustom(luaVM, argStream.GetFullErrorMessage());
 
     lua_pushboolean(luaVM, false);
     return 1;

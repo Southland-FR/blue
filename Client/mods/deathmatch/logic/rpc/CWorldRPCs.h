@@ -51,6 +51,8 @@ public:
     DECLARE_RPC(SetAircraftMaxHeight);
     DECLARE_RPC(SetAircraftMaxVelocity);
     DECLARE_RPC(SetOcclusionsEnabled);
+    DECLARE_RPC(CreateCullZone);
+    DECLARE_RPC(RemoveCullZone);
     DECLARE_RPC(ResetRainLevel);
     DECLARE_RPC(ResetSunSize);
     DECLARE_RPC(ResetSunColor);

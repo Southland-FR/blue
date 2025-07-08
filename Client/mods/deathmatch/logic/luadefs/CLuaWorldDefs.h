@@ -113,6 +113,9 @@ public:
     LUA_DECLARE(SetFPSLimit);
     LUA_DECLARE(GetFPSLimit);
 
+    LUA_DECLARE(CreateCullZone);
+    LUA_DECLARE(RemoveCullZone);
+
     LUA_DECLARE(CreateExplosion);
 
     static bool                                                                    ResetColorFilter();

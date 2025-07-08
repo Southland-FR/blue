@@ -659,6 +659,8 @@ public:
     static bool SendSyncIntervals(CPlayer* pPlayer = NULL);
     static bool SetMoonSize(int iMoonSize);
     static bool ResetMoonSize();
+    static int  CreateCullZone(float centerX, float centerY, float centerZ, float length, float bottom, float width, float top, unsigned int flags);
+    static bool RemoveCullZone(int id);
     static bool IsWorldSpecialPropertyEnabled(WorldSpecialProperty property);
     static bool SetWorldSpecialPropertyEnabled(WorldSpecialProperty property, bool isEnabled);
 
