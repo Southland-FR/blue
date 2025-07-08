@@ -639,6 +639,8 @@ public:
     static bool SetMoonSize(int iSize);
     static bool SetFPSLimit(int iLimit);
     static bool GetFPSLimit(int& iLimit);
+    static int  CreateCullZone(float centerX, float centerY, float centerZ, float length, float bottom, float width, float top, unsigned int flags);
+    static bool RemoveCullZone(int id);
 
     static bool ResetAllSurfaceInfo();
     static bool ResetSurfaceInfo(short sSurfaceID);

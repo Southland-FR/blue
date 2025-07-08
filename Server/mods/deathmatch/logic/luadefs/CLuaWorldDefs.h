@@ -79,6 +79,8 @@ public:
     LUA_DECLARE(setPedTargetingMarkerEnabled);
     LUA_DECLARE(isPedTargetingMarkerEnabled);
     LUA_DECLARE(setMoonSize);
+    LUA_DECLARE(createCullZone);
+    LUA_DECLARE(removeCullZone);
     static bool setWorldSpecialPropertyEnabled(WorldSpecialProperty property, bool isEnabled);
 
     // Reset
