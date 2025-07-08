@@ -151,6 +151,9 @@ void CClientWeapon::DoPulse()
 
     if (m_nAmmoInClip <= 0)
     {
+        if (m_pOwner && !m_pOwner->IsAutoReloadEnabled())
+            return;
+
         if (m_weaponConfig.bInstantReload == false)
         {
             if (m_nAmmoTotal >= m_pWeaponStat->GetMaximumClipAmmo() && m_State != WEAPONSTATE_RELOADING)
