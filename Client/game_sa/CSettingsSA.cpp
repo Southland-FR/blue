@@ -489,8 +489,10 @@ void CSettingsSA::SetRadarMode(eRadarMode hudMode)
 float ms_fFOV = 70;
 float ms_fFOVCar = 70;
 float ms_fFOVCarMax = 100;            // at high vehicle velocity
+float ms_fFOVAiming = 70;
 bool  ms_bFOVPlayerFromScript = false;
 bool  ms_bFOVVehicleFromScript = false;
+bool  ms_bFOVAimingFromScript = false;
 
 // consider moving this to the camera class - qaisjp
 float CSettingsSA::GetFieldOfViewPlayer()
@@ -508,6 +510,11 @@ float CSettingsSA::GetFieldOfViewVehicleMax()
     return ms_fFOVCarMax;
 }
 
+float CSettingsSA::GetFieldOfViewAiming()
+{
+    return ms_fFOVAiming;
+}
+
 void CSettingsSA::UpdateFieldOfViewFromSettings()
 {
     float fFieldOfView;
@@ -516,12 +523,14 @@ void CSettingsSA::UpdateFieldOfViewFromSettings()
     SetFieldOfViewPlayer(fFieldOfView, false);
     SetFieldOfViewVehicle(fFieldOfView, false);
     SetFieldOfViewVehicleMax(100, false);
+    SetFieldOfViewAiming(fFieldOfView, false);
 }
 
 void CSettingsSA::ResetFieldOfViewFromScript()
 {
     ms_bFOVPlayerFromScript = false;
     ms_bFOVVehicleFromScript = false;
+    ms_bFOVAimingFromScript = false;
     UpdateFieldOfViewFromSettings();
 }
 
@@ -557,6 +566,16 @@ void CSettingsSA::SetFieldOfViewVehicleMax(float fAngle, bool bFromScript)
     ms_fFOVCarMax = fAngle;
     MemPut<void*>(0x0524BB4, &ms_fFOVCarMax);
     MemPut<float>(0x0524BC5, ms_fFOVCarMax);
+}
+
+void CSettingsSA::SetFieldOfViewAiming(float fAngle, bool bFromScript)
+{
+    if (!bFromScript && ms_bFOVAimingFromScript)
+        return;
+    ms_bFOVAimingFromScript = bFromScript;
+    ms_fFOVAiming = fAngle;
+    MemPut<float>(0x0858CE0, ms_fFOVAiming);
+    MemPut<float>(0x0B6F250, ms_fFOVAiming);
 }
 
 ////////////////////////////////////////////////
