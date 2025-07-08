@@ -161,7 +161,7 @@ int CLuaAccountDefs::GetAccountPlayer(lua_State* luaVM)
 
 int CLuaAccountDefs::IsGuestAccount(lua_State* luaVM)
 {
-    //  bool isGuestAccount ( account theAccount )
+    //  bool|nil isGuestAccount ( account theAccount )
     CAccount* pAccount;
 
     CScriptArgReader argStream(luaVM);
@@ -179,7 +179,7 @@ int CLuaAccountDefs::IsGuestAccount(lua_State* luaVM)
     else
         m_pScriptDebugging->LogCustom(luaVM, argStream.GetFullErrorMessage());
 
-    lua_pushboolean(luaVM, false);
+    lua_pushnil(luaVM);
     return 1;
 }
 
