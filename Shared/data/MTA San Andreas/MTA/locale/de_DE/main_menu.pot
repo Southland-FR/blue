@@ -50,6 +50,6 @@ msgid "Quit"
 msgstr "Verlassen"
 
 #. Found in the main menu above the news listing
-msgid "Jeun test"
+msgid "The Latest News"
 msgstr "Neuigkeiten"
 

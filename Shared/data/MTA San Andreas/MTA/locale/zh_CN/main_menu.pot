@@ -50,6 +50,6 @@ msgid "Quit"
 msgstr "退出"
 
 #. Found in the main menu above the news listing
-msgid "Jeun test"
+msgid "The Latest News"
 msgstr "最新动态"
 

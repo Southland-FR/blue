@@ -50,6 +50,6 @@ msgid "Quit"
 msgstr "종료"
 
 #. Found in the main menu above the news listing
-msgid "Jeun test"
+msgid "The Latest News"
 msgstr "최근 소식"
 
