@@ -158,10 +158,12 @@ public:
     virtual void SetFieldOfViewPlayer(float fAngle, bool bFromScript) = 0;
     virtual void SetFieldOfViewVehicle(float fAngle, bool bFromScript) = 0;
     virtual void SetFieldOfViewVehicleMax(float fAngle, bool bFromScript) = 0;
+    virtual void SetFieldOfViewAiming(float fAngle, bool bFromScript) = 0;
 
     virtual float GetFieldOfViewPlayer() = 0;
     virtual float GetFieldOfViewVehicle() = 0;
     virtual float GetFieldOfViewVehicleMax() = 0;
+    virtual float GetFieldOfViewAiming() = 0;
 
     virtual void SetVehiclesLODDistance(float fVehiclesLODDistance, float fTrainsPlanesLODDistance, bool bFromScript) = 0;
     virtual void ResetVehiclesLODDistance(bool bForceDefault = false) = 0;
