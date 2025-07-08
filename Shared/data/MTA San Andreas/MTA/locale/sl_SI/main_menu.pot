@@ -50,6 +50,6 @@ msgid "Quit"
 msgstr "Izhod"
 
 #. Found in the main menu above the news listing
-msgid "Jeun test"
+msgid "The Latest News"
 msgstr ""
 
