@@ -50,6 +50,6 @@ msgid "Quit"
 msgstr "Izađi"
 
 #. Found in the main menu above the news listing
-msgid "The Latest News"
+msgid "Jeun test"
 msgstr "Najnovije vesti"
 
