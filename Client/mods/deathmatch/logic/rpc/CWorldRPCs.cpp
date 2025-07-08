@@ -46,8 +46,6 @@ void CWorldRPCs::LoadFunctions()
     AddHandler(SET_AIRCRAFT_MAXHEIGHT, SetAircraftMaxHeight, "SetAircraftMaxHeight");
     AddHandler(SET_AIRCRAFT_MAXVELOCITY, SetAircraftMaxVelocity, "SetAircraftMaxVelocity");
     AddHandler(SET_OCCLUSIONS_ENABLED, SetOcclusionsEnabled, "SetOcclusionsEnabled");
-    AddHandler(CREATE_CULL_ZONE, CreateCullZone, "CreateCullZone");
-    AddHandler(REMOVE_CULL_ZONE, RemoveCullZone, "RemoveCullZone");
 
     AddHandler(SET_INTERIOR_SOUNDS_ENABLED, SetInteriorSoundsEnabled, "SetInteriorSoundsEnabled");
     AddHandler(SET_RAIN_LEVEL, SetRainLevel, "SetRainLevel");
@@ -387,24 +385,6 @@ void CWorldRPCs::SetOcclusionsEnabled(NetBitStreamInterface& bitStream)
     {
         g_pGame->GetWorld()->SetOcclusionsEnabled(bEnabled);
     }
-}
-
-void CWorldRPCs::CreateCullZone(NetBitStreamInterface& bitStream)
-{
-    float cx, cy, cz, unk, length, bottom, width, top;
-    unsigned int flags;
-    if (bitStream.Read(cx) && bitStream.Read(cy) && bitStream.Read(cz) && bitStream.Read(unk) &&
-        bitStream.Read(length) && bitStream.Read(bottom) && bitStream.Read(width) && bitStream.Read(top) && bitStream.Read(flags))
-    {
-        CStaticFunctionDefinitions::CreateCullZone(cx, cy, cz, length, bottom, width, top, flags);
-    }
-}
-
-void CWorldRPCs::RemoveCullZone(NetBitStreamInterface& bitStream)
-{
-    int id;
-    if (bitStream.Read(id))
-        CStaticFunctionDefinitions::RemoveCullZone(id);
 }
 
 void CWorldRPCs::ResetRainLevel(NetBitStreamInterface& bitStream)

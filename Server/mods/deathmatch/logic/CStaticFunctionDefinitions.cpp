@@ -10926,31 +10926,6 @@ bool CStaticFunctionDefinitions::ResetMoonSize()
     return true;
 }
 
-int CStaticFunctionDefinitions::CreateCullZone(float centerX, float centerY, float centerZ, float length, float bottom, float width, float top, unsigned int flags)
-{
-    CBitStream bs;
-    bs.pBitStream->Write(centerX);
-    bs.pBitStream->Write(centerY);
-    bs.pBitStream->Write(centerZ);
-    bs.pBitStream->Write(0.f);
-    bs.pBitStream->Write(length);
-    bs.pBitStream->Write(bottom);
-    bs.pBitStream->Write(width);
-    bs.pBitStream->Write(top);
-    bs.pBitStream->Write(flags);
-    m_pPlayerManager->BroadcastOnlyJoined(CLuaPacket(CREATE_CULL_ZONE, *bs.pBitStream));
-    static int nextId = 1;
-    return nextId++;
-}
-
-bool CStaticFunctionDefinitions::RemoveCullZone(int id)
-{
-    CBitStream bs;
-    bs.pBitStream->Write(id);
-    m_pPlayerManager->BroadcastOnlyJoined(CLuaPacket(REMOVE_CULL_ZONE, *bs.pBitStream));
-    return true;
-}
-
 bool CStaticFunctionDefinitions::SendSyncIntervals(CPlayer* pPlayer)
 {
     auto sendSyncIntervalPatket = [](CPlayer* pPlayer)

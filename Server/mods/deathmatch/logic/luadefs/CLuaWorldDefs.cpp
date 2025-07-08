@@ -71,8 +71,6 @@ void CLuaWorldDefs::LoadFunctions()
                                                                              {"setAircraftMaxVelocity", setAircraftMaxVelocity},
                                                                              {"setOcclusionsEnabled", setOcclusionsEnabled},
                                                                              {"setMoonSize", setMoonSize},
-                                                                             {"createCullZone", createCullZone},
-                                                                             {"removeCullZone", removeCullZone},
                                                                              {"setJetpackWeaponEnabled", setJetpackWeaponEnabled},
                                                                              {"setWorldSpecialPropertyEnabled", ArgumentParserWarn<false, setWorldSpecialPropertyEnabled>},
 
@@ -881,55 +879,6 @@ int CLuaWorldDefs::setMoonSize(lua_State* luaVM)
     if (!argStream.HasErrors())
     {
         if (CStaticFunctionDefinitions::SetMoonSize(iMoonSize))
-        {
-            lua_pushboolean(luaVM, true);
-            return 1;
-        }
-    }
-    else
-        m_pScriptDebugging->LogBadType(luaVM);
-
-    lua_pushboolean(luaVM, false);
-    return 1;
-}
-
-int CLuaWorldDefs::createCullZone(lua_State* luaVM)
-{
-    CScriptArgReader argStream(luaVM);
-
-    float cx, cy, cz, unk, length, bottom, width, top;
-    unsigned int flags;
-    argStream.ReadNumber(cx);
-    argStream.ReadNumber(cy);
-    argStream.ReadNumber(cz);
-    argStream.ReadNumber(unk, 0.0f);
-    argStream.ReadNumber(length);
-    argStream.ReadNumber(bottom);
-    argStream.ReadNumber(width);
-    argStream.ReadNumber(top);
-    argStream.ReadNumber(flags);
-
-    if (!argStream.HasErrors())
-    {
-        int id = CStaticFunctionDefinitions::CreateCullZone(cx, cy, cz, length, bottom, width, top, flags);
-        lua_pushnumber(luaVM, id);
-        return 1;
-    }
-    else
-        m_pScriptDebugging->LogBadType(luaVM);
-
-    lua_pushboolean(luaVM, false);
-    return 1;
-}
-
-int CLuaWorldDefs::removeCullZone(lua_State* luaVM)
-{
-    CScriptArgReader argStream(luaVM);
-    int id;
-    argStream.ReadNumber(id);
-    if (!argStream.HasErrors())
-    {
-        if (CStaticFunctionDefinitions::RemoveCullZone(id))
         {
             lua_pushboolean(luaVM, true);
             return 1;
