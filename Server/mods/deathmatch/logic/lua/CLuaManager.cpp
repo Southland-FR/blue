@@ -24,7 +24,6 @@
 #include "luadefs/CLuaBlipDefs.h"
 #include "luadefs/CLuaBuildingDefs.h"
 #include "luadefs/CLuaColShapeDefs.h"
-#include "luadefs/CLuaCullZoneDefs.h"
 #include "luadefs/CLuaDatabaseDefs.h"
 #include "luadefs/CLuaMarkerDefs.h"
 #include "luadefs/CLuaObjectDefs.h"
@@ -196,7 +195,6 @@ void CLuaManager::LoadCFunctions()
     CLuaBuildingDefs::LoadFunctions();
     CLuaCameraDefs::LoadFunctions();
     CLuaColShapeDefs::LoadFunctions();
-    CLuaCullZoneDefs::LoadFunctions();
     CLuaDatabaseDefs::LoadFunctions();
     CLuaElementDefs::LoadFunctions();
     CLuaHandlingDefs::LoadFunctions();
