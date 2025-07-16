@@ -481,6 +481,15 @@ void CAudioEngineSA::SetWorldSoundHandler(WorldSoundHandler* pHandler)
 
 bool CAudioEngineSA::OnWorldSound(CAESound* pAESound)
 {
+    // Apply current game speed to the sound. By default GTA only slows
+    // down sounds when the time scale is below 1.0. For values above 1.0
+    // the game doesn't update the sound time scale, which results in
+    // world sounds playing at normal speed even though the rest of the
+    // game is sped up. Manually set the time scale here so sounds are
+    // sped up as well.
+    if (pGame)
+        pAESound->m_fTimeScale = pGame->GetGameSpeed();
+
     if (!IsWorldSoundEnabled(pAESound->usGroup, pAESound->usIndex))
         return false;
 
