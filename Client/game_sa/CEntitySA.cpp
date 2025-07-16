@@ -666,6 +666,14 @@ bool CEntitySA::SetBoneScale(eBone boneId, const CVector& scale)
         return false;
 
     pGame->GetRenderWareSA()->RwMatrixSetScale(*rwBoneMatrix, scale);
+
+    CMatrixSAInterface boneMatrix(rwBoneMatrix, false);
+    boneMatrix.UpdateRW();
+
+    CEntitySAInterface* theInterface = GetInterface();
+    if (theInterface)
+        theInterface->bDontUpdateHierarchy = false;
+
     return true;
 }
 
