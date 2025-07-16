@@ -39,6 +39,7 @@ void CLuaPedDefs::LoadFunctions()
         {"setElementBoneRotation", ArgumentParserWarn<false, SetElementBoneRotation>},
         {"setElementBoneQuaternion", ArgumentParserWarn<false, SetElementBoneQuaternion>},
         {"setElementBoneMatrix", ArgumentParserWarn<false, SetElementBoneMatrix>},
+        {"setElementBoneScale", ArgumentParserWarn<false, SetElementBoneScale>},
         {"setPedRotation", SetPedRotation},
         {"setPedWeaponSlot", SetPedWeaponSlot},
         {"setPedCanBeKnockedOffBike", SetPedCanBeKnockedOffBike},
@@ -69,6 +70,7 @@ void CLuaPedDefs::LoadFunctions()
         {"getElementBoneRotation", ArgumentParserWarn<false, GetElementBoneRotation>},
         {"getElementBoneQuaternion", ArgumentParserWarn<false, GetElementBoneQuaternion>},
         {"getElementBoneMatrix", ArgumentParserWarn<false, GetElementBoneMatrix>},
+        {"getElementBoneScale", ArgumentParserWarn<false, GetElementBoneScale>},
         {"getPedRotation", GetPedRotation},
         {"getPedWeaponSlot", GetPedWeaponSlot},
         {"canPedBeKnockedOffBike", CanPedBeKnockedOffBike},
@@ -1114,6 +1116,33 @@ bool CLuaPedDefs::SetElementBoneMatrix(CClientPed* ped, const std::uint16_t bone
         return false;
 
     return entity->SetBoneMatrix(static_cast<eBone>(bone), matrix);
+}
+
+std::variant<bool, CLuaMultiReturn<float, float, float>> CLuaPedDefs::GetElementBoneScale(CClientPed* ped, const std::uint16_t bone)
+{
+    if (bone < BONE_ROOT || bone > BONE_LEFTBREAST)
+        throw std::invalid_argument("Invalid bone: " + std::to_string(bone));
+
+    CEntity* entity = ped->GetGameEntity();
+    CVector  scale;
+
+    if (!entity || !entity->GetBoneScale(static_cast<eBone>(bone), scale))
+        return false;
+
+    return CLuaMultiReturn<float, float, float>(scale.fX, scale.fY, scale.fZ);
+}
+
+bool CLuaPedDefs::SetElementBoneScale(CClientPed* ped, const std::uint16_t bone, const CVector scale)
+{
+    if (bone < BONE_ROOT || bone > BONE_LEFTBREAST)
+        throw std::invalid_argument("Invalid bone: " + std::to_string(bone));
+
+    CEntity* entity = ped->GetGameEntity();
+
+    if (!entity)
+        return false;
+
+    return entity->SetBoneScale(static_cast<eBone>(bone), scale);
 }
 
 bool CLuaPedDefs::UpdateElementRpHAnim(CClientPed* ped)
