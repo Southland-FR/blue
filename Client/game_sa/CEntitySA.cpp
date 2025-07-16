@@ -649,6 +649,26 @@ bool CEntitySA::SetBonePosition(eBone boneId, const CVector& position)
     return true;
 }
 
+bool CEntitySA::GetBoneScale(eBone boneId, CVector& scale)
+{
+    RwMatrix* rwBoneMatrix = GetBoneRwMatrix(boneId);
+    if (!rwBoneMatrix)
+        return false;
+
+    pGame->GetRenderWareSA()->RwMatrixGetScale(*rwBoneMatrix, scale);
+    return true;
+}
+
+bool CEntitySA::SetBoneScale(eBone boneId, const CVector& scale)
+{
+    RwMatrix* rwBoneMatrix = GetBoneRwMatrix(boneId);
+    if (!rwBoneMatrix)
+        return false;
+
+    pGame->GetRenderWareSA()->RwMatrixSetScale(*rwBoneMatrix, scale);
+    return true;
+}
+
 BYTE CEntitySA::GetAreaCode()
 {
     return m_pInterface->m_areaCode;
