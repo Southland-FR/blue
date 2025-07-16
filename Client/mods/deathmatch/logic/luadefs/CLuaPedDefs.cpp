@@ -39,6 +39,7 @@ void CLuaPedDefs::LoadFunctions()
         {"setElementBoneRotation", ArgumentParserWarn<false, SetElementBoneRotation>},
         {"setElementBoneQuaternion", ArgumentParserWarn<false, SetElementBoneQuaternion>},
         {"setElementBoneMatrix", ArgumentParserWarn<false, SetElementBoneMatrix>},
+        {"setElementBoneScale", ArgumentParserWarn<false, SetElementBoneScale>},
         {"setPedRotation", SetPedRotation},
         {"setPedWeaponSlot", SetPedWeaponSlot},
         {"setPedCanBeKnockedOffBike", SetPedCanBeKnockedOffBike},
@@ -69,6 +70,7 @@ void CLuaPedDefs::LoadFunctions()
         {"getElementBoneRotation", ArgumentParserWarn<false, GetElementBoneRotation>},
         {"getElementBoneQuaternion", ArgumentParserWarn<false, GetElementBoneQuaternion>},
         {"getElementBoneMatrix", ArgumentParserWarn<false, GetElementBoneMatrix>},
+        {"getElementBoneScale", ArgumentParserWarn<false, GetElementBoneScale>},
         {"getPedRotation", GetPedRotation},
         {"getPedWeaponSlot", GetPedWeaponSlot},
         {"canPedBeKnockedOffBike", CanPedBeKnockedOffBike},
@@ -180,6 +182,7 @@ void CLuaPedDefs::AddClass(lua_State* luaVM)
     lua_classfunction(luaVM, "getTargetStart", OOP_GetPedTargetStart);
     lua_classfunction(luaVM, "getWeaponMuzzlePosition", "getPedWeaponMuzzlePosition");
     lua_classfunction(luaVM, "getBonePosition", OOP_GetPedBonePosition);
+    lua_classfunction(luaVM, "getBoneScale", OOP_GetPedBoneScale);
     lua_classfunction(luaVM, "getCameraRotation", "getPedCameraRotation");
     lua_classfunction(luaVM, "getWeaponSlot", "getPedWeaponSlot");
     lua_classfunction(luaVM, "getWalkingStyle", "getPedWalkingStyle");
@@ -1064,6 +1067,20 @@ std::variant<bool, std::array<std::array<float, 4>, 4>> CLuaPedDefs::GetElementB
     return matrix.To4x4Array();
 }
 
+std::variant<bool, CLuaMultiReturn<float, float, float>> CLuaPedDefs::GetElementBoneScale(CClientPed* ped, std::uint16_t bone)
+{
+    if (bone < BONE_ROOT || bone > BONE_LEFTBREAST)
+        throw std::invalid_argument("Invalid bone: " + std::to_string(bone));
+
+    CEntity* entity = ped->GetGameEntity();
+
+    float sx = 1.0f, sy = 1.0f, sz = 1.0f;
+    if (entity && entity->GetBoneScale(static_cast<eBone>(bone), sx, sy, sz))
+        return CLuaMultiReturn<float, float, float>(sx, sy, sz);
+
+    return false;
+}
+
 bool CLuaPedDefs::SetElementBonePosition(CClientPed* ped, const std::uint16_t bone, const CVector position)
 {
     if (bone < BONE_ROOT || bone > BONE_LEFTBREAST)
@@ -1114,6 +1131,16 @@ bool CLuaPedDefs::SetElementBoneMatrix(CClientPed* ped, const std::uint16_t bone
         return false;
 
     return entity->SetBoneMatrix(static_cast<eBone>(bone), matrix);
+}
+
+bool CLuaPedDefs::SetElementBoneScale(CClientPed* ped, std::uint16_t bone, float scaleX, float scaleY, float scaleZ)
+{
+    if (bone < BONE_ROOT || bone > BONE_LEFTBREAST)
+        throw std::invalid_argument("Invalid bone: " + std::to_string(bone));
+
+    CEntity* entity = ped->GetGameEntity();
+
+    return entity ? entity->SetBoneScale(static_cast<eBone>(bone), scaleX, scaleY, scaleZ) : false;
 }
 
 bool CLuaPedDefs::UpdateElementRpHAnim(CClientPed* ped)
@@ -1187,6 +1214,34 @@ int CLuaPedDefs::OOP_GetPedBonePosition(lua_State* luaVM)
             if (CStaticFunctionDefinitions::GetPedBonePosition(*pPed, bone, vecPosition))
             {
                 lua_pushvector(luaVM, vecPosition);
+                return 1;
+            }
+        }
+    }
+    else
+        m_pScriptDebugging->LogCustom(luaVM, argStream.GetFullErrorMessage());
+
+    lua_pushboolean(luaVM, false);
+    return 1;
+}
+
+int CLuaPedDefs::OOP_GetPedBoneScale(lua_State* luaVM)
+{
+    CClientPed*      pPed = nullptr;
+    unsigned char    ucBone = 0;
+    CScriptArgReader argStream(luaVM);
+    argStream.ReadUserData(pPed);
+    argStream.ReadNumber(ucBone);
+
+    if (!argStream.HasErrors())
+    {
+        if (ucBone <= BONE_RIGHTFOOT)
+        {
+            eBone bone = (eBone)ucBone;
+            float  sx, sy, sz;
+            if (pPed->GetGameEntity() && pPed->GetGameEntity()->GetBoneScale(bone, sx, sy, sz))
+            {
+                lua_pushvector(luaVM, CVector(sx, sy, sz));
                 return 1;
             }
         }
