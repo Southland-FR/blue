@@ -649,6 +649,58 @@ bool CEntitySA::SetBonePosition(eBone boneId, const CVector& position)
     return true;
 }
 
+bool CEntitySA::GetBoneScale(eBone boneId, float& scaleX, float& scaleY, float& scaleZ)
+{
+    RwMatrix* rwBoneMatrix = GetBoneRwMatrix(boneId);
+    if (!rwBoneMatrix)
+        return false;
+
+    CVector right(rwBoneMatrix->right.x, rwBoneMatrix->right.y, rwBoneMatrix->right.z);
+    CVector up(rwBoneMatrix->up.x, rwBoneMatrix->up.y, rwBoneMatrix->up.z);
+    CVector at(rwBoneMatrix->at.x, rwBoneMatrix->at.y, rwBoneMatrix->at.z);
+
+    scaleX = right.Length();
+    scaleY = up.Length();
+    scaleZ = at.Length();
+    return true;
+}
+
+bool CEntitySA::SetBoneScale(eBone boneId, float scaleX, float scaleY, float scaleZ)
+{
+    RwMatrix* rwBoneMatrix = GetBoneRwMatrix(boneId);
+    if (!rwBoneMatrix)
+        return false;
+
+    CVector right(rwBoneMatrix->right.x, rwBoneMatrix->right.y, rwBoneMatrix->right.z);
+    CVector up(rwBoneMatrix->up.x, rwBoneMatrix->up.y, rwBoneMatrix->up.z);
+    CVector at(rwBoneMatrix->at.x, rwBoneMatrix->at.y, rwBoneMatrix->at.z);
+
+    float lenX = right.Length();
+    float lenY = up.Length();
+    float lenZ = at.Length();
+
+    if (lenX == 0.0f || lenY == 0.0f || lenZ == 0.0f)
+        return false;
+
+    float factorX = scaleX / lenX;
+    float factorY = scaleY / lenY;
+    float factorZ = scaleZ / lenZ;
+
+    rwBoneMatrix->right.x *= factorX;
+    rwBoneMatrix->right.y *= factorX;
+    rwBoneMatrix->right.z *= factorX;
+    rwBoneMatrix->up.x *= factorY;
+    rwBoneMatrix->up.y *= factorY;
+    rwBoneMatrix->up.z *= factorY;
+    rwBoneMatrix->at.x *= factorZ;
+    rwBoneMatrix->at.y *= factorZ;
+    rwBoneMatrix->at.z *= factorZ;
+
+    CMatrixSAInterface boneMatrix(rwBoneMatrix, false);
+    boneMatrix.UpdateRW();
+    return true;
+}
+
 BYTE CEntitySA::GetAreaCode()
 {
     return m_pInterface->m_areaCode;
