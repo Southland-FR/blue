@@ -118,6 +118,9 @@ public:
     virtual bool GetBonePosition(eBone boneId, CVector& position) = 0;
     virtual bool SetBonePosition(eBone boneId, const CVector& position) = 0;
 
+    virtual bool GetBoneScale(eBone boneId, CVector& scale) = 0;
+    virtual bool SetBoneScale(eBone boneId, const CVector& scale) = 0;
+
     virtual bool IsOnFire() = 0;
     virtual bool SetOnFire(bool onFire) = 0;
 };
