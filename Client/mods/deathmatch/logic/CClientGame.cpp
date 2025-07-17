@@ -7065,7 +7065,7 @@ void CClientGame::ApplyPedBoneScales()
                 continue;
 
             RwV3d factors = {scale.fX / curX, scale.fY / curY, scale.fZ / curZ};
-            RwMatrixScale(rwBoneMatrix, &factors, rwCOMBINEPRECONCAT);
+            RwMatrixScale(rwBoneMatrix, &factors, (RwTransformOrder)rwCOMBINEPRECONCAT);
 
             CMatrixSAInterface boneMatrix(rwBoneMatrix, false);
             boneMatrix.UpdateRW();
