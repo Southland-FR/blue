@@ -1073,6 +1073,9 @@ std::variant<bool, CLuaMultiReturn<float, float, float>> CLuaPedDefs::GetElement
         throw std::invalid_argument("Invalid bone: " + std::to_string(bone));
 
     CEntity* entity = ped->GetGameEntity();
+    CVector scale;
+    if (g_pClientGame->GetPedBoneScaleCache(ped, static_cast<eBone>(bone), scale))
+        return CLuaMultiReturn<float, float, float>(scale.fX, scale.fY, scale.fZ);
 
     float sx = 1.0f, sy = 1.0f, sz = 1.0f;
     if (entity && entity->GetBoneScale(static_cast<eBone>(bone), sx, sy, sz))
@@ -1139,8 +1142,12 @@ bool CLuaPedDefs::SetElementBoneScale(CClientPed* ped, std::uint16_t bone, float
         throw std::invalid_argument("Invalid bone: " + std::to_string(bone));
 
     CEntity* entity = ped->GetGameEntity();
+    if (!entity)
+        return false;
 
-    return entity ? entity->SetBoneScale(static_cast<eBone>(bone), scaleX, scaleY, scaleZ) : false;
+    entity->SetBoneScale(static_cast<eBone>(bone), scaleX, scaleY, scaleZ);
+    g_pClientGame->SetPedBoneScaleCache(ped, static_cast<eBone>(bone), CVector(scaleX, scaleY, scaleZ));
+    return true;
 }
 
 bool CLuaPedDefs::UpdateElementRpHAnim(CClientPed* ped)
