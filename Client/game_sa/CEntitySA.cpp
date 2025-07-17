@@ -649,6 +649,66 @@ bool CEntitySA::SetBonePosition(eBone boneId, const CVector& position)
     return true;
 }
 
+bool CEntitySA::GetBoneScale(eBone boneId, float& scaleX, float& scaleY, float& scaleZ)
+{
+    RwMatrix* rwBoneMatrix = GetBoneRwMatrix(boneId);
+    if (!rwBoneMatrix)
+        return false;
+
+    CVector right(rwBoneMatrix->right.x, rwBoneMatrix->right.y, rwBoneMatrix->right.z);
+    CVector up(rwBoneMatrix->up.x, rwBoneMatrix->up.y, rwBoneMatrix->up.z);
+    CVector at(rwBoneMatrix->at.x, rwBoneMatrix->at.y, rwBoneMatrix->at.z);
+
+    scaleX = right.Length();
+    scaleY = up.Length();
+    scaleZ = at.Length();
+    return true;
+}
+
+// NOTE: The scale will be reset if UpdateElementRpHAnim is called after this.
+bool CEntitySA::SetBoneScale(eBone boneId, float scaleX, float scaleY, float scaleZ)
+{
+    RwMatrix* rwBoneMatrix = GetBoneRwMatrix(boneId);
+    if (!rwBoneMatrix)
+        return false;
+
+    CVector right(rwBoneMatrix->right.x, rwBoneMatrix->right.y, rwBoneMatrix->right.z);
+    CVector up(rwBoneMatrix->up.x, rwBoneMatrix->up.y, rwBoneMatrix->up.z);
+    CVector at(rwBoneMatrix->at.x, rwBoneMatrix->at.y, rwBoneMatrix->at.z);
+
+    float currentX = right.Length();
+    float currentY = up.Length();
+    float currentZ = at.Length();
+
+    if (currentX == 0.0f || currentY == 0.0f || currentZ == 0.0f)
+        return false;
+
+    float factorX = scaleX / currentX;
+    float factorY = scaleY / currentY;
+    float factorZ = scaleZ / currentZ;
+
+    right *= factorX;
+    up *= factorY;
+    at *= factorZ;
+
+    rwBoneMatrix->right.x = right.fX;
+    rwBoneMatrix->right.y = right.fY;
+    rwBoneMatrix->right.z = right.fZ;
+
+    rwBoneMatrix->up.x = up.fX;
+    rwBoneMatrix->up.y = up.fY;
+    rwBoneMatrix->up.z = up.fZ;
+
+    rwBoneMatrix->at.x = at.fX;
+    rwBoneMatrix->at.y = at.fY;
+    rwBoneMatrix->at.z = at.fZ;
+
+    CMatrixSAInterface boneMatrix(rwBoneMatrix, false);
+    boneMatrix.UpdateRW();
+
+    return true;
+}
+
 BYTE CEntitySA::GetAreaCode()
 {
     return m_pInterface->m_areaCode;
