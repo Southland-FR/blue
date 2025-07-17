@@ -36,8 +36,6 @@
 #include "game/CClock.h"
 #include <game/CProjectileInfo.h>
 #include <game/CVehicleAudioSettingsManager.h>
-#include "game_sa/CMatrixSA.h"
-#include "game_sa/gamesa_renderware.h"
 #include <windowsx.h>
 #include "CServerInfo.h"
 
