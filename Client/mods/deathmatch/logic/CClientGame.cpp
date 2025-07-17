@@ -36,8 +36,6 @@
 #include "game/CClock.h"
 #include <game/CProjectileInfo.h>
 #include <game/CVehicleAudioSettingsManager.h>
-#include "game_sa/CMatrixSA.h"
-#include "game_sa/gamesa_renderware.h"
 #include <windowsx.h>
 #include "CServerInfo.h"
 
@@ -3892,8 +3890,6 @@ void CClientGame::PostWorldProcessPedsAfterPreRenderHandler()
     CLuaArguments Arguments;
     m_pRootEntity->CallEvent("onClientPedsProcessed", Arguments, false);
 
-    ApplyPedBoneScales();
-
     g_pClientGame->GetModelRenderer()->Update();
 }
 
@@ -7014,67 +7010,6 @@ void CClientGame::InsertPedPointerToSet(CClientPed* pPed)
 void CClientGame::RemovePedPointerFromSet(CClientPed* pPed)
 {
     m_setOfPedPointers.erase(pPed);
-    m_mapPedBoneScales.erase(pPed);
-}
-
-void CClientGame::SetPedBoneScaleCache(CClientPed* ped, eBone bone, const CVector& scale)
-{
-    m_mapPedBoneScales[ped][bone] = scale;
-}
-
-bool CClientGame::GetPedBoneScaleCache(CClientPed* ped, eBone bone, CVector& outScale) const
-{
-    auto pedIt = m_mapPedBoneScales.find(ped);
-    if (pedIt == m_mapPedBoneScales.end())
-        return false;
-    auto boneIt = pedIt->second.find(bone);
-    if (boneIt == pedIt->second.end())
-        return false;
-    outScale = boneIt->second;
-    return true;
-}
-
-void CClientGame::RemovePedBoneScales(CClientPed* ped)
-{
-    m_mapPedBoneScales.erase(ped);
-}
-
-void CClientGame::ApplyPedBoneScales()
-{
-    for (auto& pedEntry : m_mapPedBoneScales)
-    {
-        CClientPed* ped = pedEntry.first;
-        CEntity*    entity = ped->GetGameEntity();
-        if (!entity)
-            continue;
-        RpClump* clump = entity->GetRpClump();
-        for (auto& boneEntry : pedEntry.second)
-        {
-            eBone          bone = boneEntry.first;
-            const CVector& scale = boneEntry.second;
-            RwMatrix*      rwBoneMatrix = entity->GetBoneRwMatrix(bone);
-            if (!rwBoneMatrix)
-                continue;
-
-            CVector right(rwBoneMatrix->right.x, rwBoneMatrix->right.y, rwBoneMatrix->right.z);
-            CVector up(rwBoneMatrix->up.x, rwBoneMatrix->up.y, rwBoneMatrix->up.z);
-            CVector at(rwBoneMatrix->at.x, rwBoneMatrix->at.y, rwBoneMatrix->at.z);
-
-            float curX = right.Length();
-            float curY = up.Length();
-            float curZ = at.Length();
-            if (curX == 0.0f || curY == 0.0f || curZ == 0.0f)
-                continue;
-
-            RwV3d factors = {scale.fX / curX, scale.fY / curY, scale.fZ / curZ};
-            RwMatrixScale(rwBoneMatrix, &factors, rwCOMBINEPRECONCAT);
-
-            CMatrixSAInterface boneMatrix(rwBoneMatrix, false);
-            boneMatrix.UpdateRW();
-        }
-        if (clump)
-            RwFrameUpdateObjects(RpGetFrame(clump));
-    }
 }
 
 CClientPed* CClientGame::GetClientPedByClump(const RpClump& Clump)
