@@ -13,6 +13,7 @@
 #pragma once
 
 #include <game/RenderWare.h>
+#include "gamesa_init.h"
 
 struct CColModelSAInterface;
 
