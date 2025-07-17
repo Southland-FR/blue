@@ -44,6 +44,7 @@
 #include "CVoiceRecorder.h"
 #include "CSingularFileDownloadManager.h"
 #include "CObjectRespawner.h"
+#include <game/CPed.h>
 
 #define HeliKill_List_Clear_Rate        500
 #define MIN_PUSH_ANTISPAM_RATE          1500
@@ -654,6 +655,11 @@ public:
     void        RemovePedPointerFromSet(CClientPed* pPed);
     CClientPed* GetClientPedByClump(const RpClump& Clump);
 
+    void SetPedBoneScaleCache(CClientPed* ped, eBone bone, const CVector& scale);
+    bool GetPedBoneScaleCache(CClientPed* ped, eBone bone, CVector& outScale) const;
+    void RemovePedBoneScales(CClientPed* ped);
+    void ApplyPedBoneScales();
+
     void OnClientIFPUnload(const std::shared_ptr<CClientIFP>& IFP);
 
     void InsertAnimationAssociationToMap(CAnimBlendAssociationSAInterface* pAnimAssociation, const std::shared_ptr<CIFPAnimations>& pIFPAnimations);
@@ -868,6 +874,7 @@ private:
     // (unsigned int) Key is the hash of custom block name that is supplied to engineLoadIFP
     std::map<unsigned int, std::shared_ptr<CClientIFP> > m_mapOfIfpPointers;
     std::set<CClientPed*>                                m_setOfPedPointers;
+    std::map<CClientPed*, std::map<eBone, CVector>>       m_mapPedBoneScales;
     AnimAssociations_type                                m_mapOfCustomAnimationAssociations;
     // Key is the task and value is the CClientPed*
     RunNamedAnimTask_type m_mapOfRunNamedAnimTasks;
