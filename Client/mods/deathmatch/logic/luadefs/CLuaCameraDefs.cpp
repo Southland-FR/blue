@@ -244,10 +244,6 @@ int CLuaCameraDefs::SetCameraFieldOfView(lua_State* luaVM)
             {
                 g_pGame->GetSettings()->SetFieldOfViewVehicleMax(fFOV, true, instant);
             }
-            else if (eMode == FOV_MODE_AIMING)
-            {
-                g_pGame->GetSettings()->SetFieldOfViewAiming(fFOV, true, instant);
-            }
             else
             {
                 argStream.m_iIndex = 1;
@@ -282,8 +278,6 @@ int CLuaCameraDefs::GetCameraFieldOfView(lua_State* luaVM)
             fFOV = g_pGame->GetSettings()->GetFieldOfViewVehicle();
         else if (eMode == FOV_MODE_VEHICLE_MAX)
             fFOV = g_pGame->GetSettings()->GetFieldOfViewVehicleMax();
-        else if (eMode == FOV_MODE_AIMING)
-            fFOV = g_pGame->GetSettings()->GetFieldOfViewAiming();
         else
         {
             argStream.m_iIndex = 1;
