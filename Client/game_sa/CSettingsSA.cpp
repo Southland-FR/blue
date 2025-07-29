@@ -525,11 +525,8 @@ void CSettingsSA::UpdateFieldOfViewFromSettings()
     SetFieldOfViewPlayer(fFieldOfView, false);
     SetFieldOfViewVehicle(fFieldOfView, false);
     SetFieldOfViewVehicleMax(100, false);
-
-    float fFieldOfViewAiming = fFieldOfView;
-    g_pCore->GetCVars()->Get("fov_aiming", fFieldOfViewAiming);
-    fFieldOfViewAiming = Clamp(70.f, fFieldOfViewAiming, 100.f);
-    SetFieldOfViewAiming(fFieldOfViewAiming, false);
+    // Use the same base FOV for aiming when not overridden by scripts
+    SetFieldOfViewAiming(fFieldOfView, false);
 }
 
 void CSettingsSA::ResetFieldOfViewFromScript()
