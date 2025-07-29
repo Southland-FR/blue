@@ -5146,10 +5146,6 @@ void CClientVehicle::ApplyAudioSettings()
 
     g_pGame->GetVehicleAudioSettingsManager()->SetNextSettings(&GetAudioSettings());
     m_pVehicle->ReinitAudio();
-
-    // Reset next settings to model defaults so future vehicles created by GTA
-    // don't inherit this vehicle's custom audio setup
-    g_pGame->GetVehicleAudioSettingsManager()->SetNextSettings(m_usModel);
 }
 
 void CClientVehicle::ResetAudioSettings()
