@@ -165,9 +165,11 @@ public:
     void  SetFieldOfViewPlayer(float fAngle, bool bFromScript, bool instant = false);
     void  SetFieldOfViewVehicle(float fAngle, bool bFromScript, bool instant = false);
     void  SetFieldOfViewVehicleMax(float fAngle, bool bFromScript, bool instant = false);
+    void  SetFieldOfViewAiming(float fAngle, bool bFromScript, bool instant = false);
     float GetFieldOfViewPlayer();
     float GetFieldOfViewVehicle();
     float GetFieldOfViewVehicleMax();
+    float GetFieldOfViewAiming();
 
     void SetVehiclesLODDistance(float fVehiclesLODDistance, float fTrainsPlanesLODDistance, bool bFromScript);
     void ResetVehiclesLODDistance(bool bForceDefault = false);

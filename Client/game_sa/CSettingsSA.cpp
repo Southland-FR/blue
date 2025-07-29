@@ -491,8 +491,10 @@ void CSettingsSA::SetRadarMode(eRadarMode hudMode)
 float ms_fFOV = 70;
 float ms_fFOVCar = 70;
 float ms_fFOVCarMax = 100;            // at high vehicle velocity
+float ms_fFOVAiming = 70;
 bool  ms_bFOVPlayerFromScript = false;
 bool  ms_bFOVVehicleFromScript = false;
+bool  ms_bFOVAimingFromScript = false;
 
 // consider moving this to the camera class - qaisjp
 float CSettingsSA::GetFieldOfViewPlayer()
@@ -508,6 +510,11 @@ float CSettingsSA::GetFieldOfViewVehicle()
 float CSettingsSA::GetFieldOfViewVehicleMax()
 {
     return ms_fFOVCarMax;
+}
+
+float CSettingsSA::GetFieldOfViewAiming()
+{
+    return ms_fFOVAiming;
 }
 
 void CSettingsSA::UpdateFieldOfViewFromSettings()
@@ -596,6 +603,37 @@ void CSettingsSA::SetFieldOfViewVehicleMax(float fAngle, bool bFromScript, bool 
     // CCam::Process_FollowCar_SA
     MemPut<void*>(0x0524BB4, &ms_fFOVCarMax);
     MemPut<float>(0x0524BC5, ms_fFOVCarMax);
+}
+
+void CSettingsSA::SetFieldOfViewAiming(float fAngle, bool bFromScript, bool instant)
+{
+    if (!bFromScript && ms_bFOVAimingFromScript)
+        return;
+
+    ms_bFOVAimingFromScript = bFromScript;
+    ms_fFOVAiming = fAngle;
+
+    if (instant)
+    {
+        const auto pair = GetActiveCamPlusMode();
+
+        switch (pair.second)
+        {
+            case MODE_AIMWEAPON:
+            case MODE_AIMWEAPON_FROMCAR:
+            case MODE_AIMWEAPON_ATTACHED:
+            case MODE_M16_1STPERSON:
+            case MODE_ROCKETLAUNCHER:
+            case MODE_ROCKETLAUNCHER_HS:
+            case MODE_HELICANNON_1STPERSON:
+            case MODE_CAMERA:
+            case MODE_SNIPER:
+                pair.first->SetFOV(fAngle);
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 ////////////////////////////////////////////////
