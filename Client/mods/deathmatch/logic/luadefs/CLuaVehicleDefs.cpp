@@ -4503,8 +4503,7 @@ bool CLuaVehicleDefs::ResetVehicleModelAudioSettings(const uint32_t uiModel)
     if (!CClientVehicleManager::IsStandardModel(uiModel))
         throw std::invalid_argument("Cannot change audio setting for allocated vechiles");
 
-    g_pGame->GetVehicleAudioSettingsManager()->ResetModelSettings(uiModel);
-    return true;
+     g_pGame->GetVehicleAudioSettingsManager()->ResetModelSettings(uiModel);
 }
 
 bool CLuaVehicleDefs::SetVehicleAudioSetting(CClientVehicle* pVehicle, const VehicleAudioSettingProperty eProperty, float varValue)
