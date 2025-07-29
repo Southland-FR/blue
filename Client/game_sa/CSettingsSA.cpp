@@ -525,12 +525,15 @@ void CSettingsSA::UpdateFieldOfViewFromSettings()
     SetFieldOfViewPlayer(fFieldOfView, false);
     SetFieldOfViewVehicle(fFieldOfView, false);
     SetFieldOfViewVehicleMax(100, false);
+    // Use the same base FOV for aiming when not overridden by scripts
+    SetFieldOfViewAiming(fFieldOfView, false);
 }
 
 void CSettingsSA::ResetFieldOfViewFromScript()
 {
     ms_bFOVPlayerFromScript = false;
     ms_bFOVVehicleFromScript = false;
+    ms_bFOVAimingFromScript = false;
     UpdateFieldOfViewFromSettings();
 }
 
