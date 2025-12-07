@@ -649,6 +649,38 @@ bool CEntitySA::SetBonePosition(eBone boneId, const CVector& position)
     return true;
 }
 
+bool CEntitySA::GetBoneScale(eBone boneId, CVector& scale)
+{
+    RwMatrix* rwBoneMatrix = GetBoneRwMatrix(boneId);
+    if (!rwBoneMatrix)
+        return false;
+
+    float scaleX = std::sqrt(rwBoneMatrix->right.x * rwBoneMatrix->right.x +
+                             rwBoneMatrix->right.y * rwBoneMatrix->right.y +
+                             rwBoneMatrix->right.z * rwBoneMatrix->right.z);
+    float scaleY = std::sqrt(rwBoneMatrix->up.x * rwBoneMatrix->up.x +
+                             rwBoneMatrix->up.y * rwBoneMatrix->up.y +
+                             rwBoneMatrix->up.z * rwBoneMatrix->up.z);
+    float scaleZ = std::sqrt(rwBoneMatrix->at.x * rwBoneMatrix->at.x +
+                             rwBoneMatrix->at.y * rwBoneMatrix->at.y +
+                             rwBoneMatrix->at.z * rwBoneMatrix->at.z);
+
+    scale = CVector(scaleX, scaleY, scaleZ);
+    return true;
+}
+
+// NOTE: The scale will be reset if UpdateElementRpHAnim is called after this.
+bool CEntitySA::SetBoneScale(eBone boneId, const CVector& scale)
+{
+    RwMatrix* rwBoneMatrix = GetBoneRwMatrix(boneId);
+    if (!rwBoneMatrix)
+        return false;
+
+    RwV3d rwScale = {scale.fX, scale.fY, scale.fZ};
+    RwMatrixScale(rwBoneMatrix, &rwScale, rwCOMBINEPRECONCAT);
+    return true;
+}
+
 BYTE CEntitySA::GetAreaCode()
 {
     return m_pInterface->m_areaCode;
