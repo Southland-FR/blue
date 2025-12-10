@@ -642,10 +642,37 @@ bool CEntitySA::SetBonePosition(eBone boneId, const CVector& position)
     RwMatrix* rwBoneMatrix = GetBoneRwMatrix(boneId);
     if (!rwBoneMatrix)
         return false;
-        
+
     CMatrixSAInterface boneMatrix(rwBoneMatrix, false);
     boneMatrix.SetTranslateOnly(position);
     boneMatrix.UpdateRW();
+    return true;
+}
+
+// NOTE: The scale will be reset if UpdateElementRpHAnim is called after this.
+// Use CClientPed::SetBoneScale for persistent scaling.
+bool CEntitySA::GetBoneScale(eBone boneId, CVector& scale)
+{
+    RwMatrix* rwBoneMatrix = GetBoneRwMatrix(boneId);
+    if (!rwBoneMatrix)
+        return false;
+
+    pGame->GetRenderWare()->RwMatrixGetScale(*rwBoneMatrix, scale);
+    return true;
+}
+
+// NOTE: The scale will be reset if UpdateElementRpHAnim is called after this.
+// Use CClientPed::SetBoneScale for persistent scaling.
+bool CEntitySA::SetBoneScale(eBone boneId, const CVector& scale)
+{
+    RwMatrix* rwBoneMatrix = GetBoneRwMatrix(boneId);
+    if (!rwBoneMatrix)
+        return false;
+
+    // Use RwMatrixScale with TRANSFORM_BEFORE (rwCOMBINEPRECONCAT) to apply scaling
+    // while preserving the existing rotation. This is the same approach used by
+    // other GTA:SA mods like bobble-heads.
+    RwMatrixScale(rwBoneMatrix, (RwV3d*)&scale, TRANSFORM_BEFORE);
     return true;
 }
 

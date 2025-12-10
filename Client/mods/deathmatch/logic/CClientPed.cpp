@@ -1128,6 +1128,113 @@ CVector* CClientPed::GetTransformedBonePosition(eBone bone, CVector& vecPosition
     return NULL;
 }
 
+bool CClientPed::SetBoneScale(eBone boneId, const CVector& scale)
+{
+    if (!m_pPlayerPed)
+        return false;
+
+    // Validate bone ID
+    if (boneId < BONE_ROOT || boneId > BONE_LEFTBREAST)
+        return false;
+
+    // Store the scale for persistent application
+    m_boneScales[boneId] = scale;
+
+    // Apply immediately
+    CEntity* entity = m_pPlayerPed;
+    if (entity)
+    {
+        entity->SetBoneScale(boneId, scale);
+    }
+
+    return true;
+}
+
+bool CClientPed::GetBoneScale(eBone boneId, CVector& scale) const
+{
+    // First check if we have a stored scale
+    auto it = m_boneScales.find(boneId);
+    if (it != m_boneScales.end())
+    {
+        scale = it->second;
+        return true;
+    }
+
+    // Otherwise get from entity (will be default 1,1,1)
+    if (!m_pPlayerPed)
+        return false;
+
+    CEntity* entity = m_pPlayerPed;
+    if (entity)
+    {
+        return entity->GetBoneScale(boneId, scale);
+    }
+
+    return false;
+}
+
+bool CClientPed::ResetBoneScale(eBone boneId)
+{
+    auto it = m_boneScales.find(boneId);
+    if (it == m_boneScales.end())
+        return false;
+
+    m_boneScales.erase(it);
+
+    // Reset to default scale (1, 1, 1)
+    if (m_pPlayerPed)
+    {
+        CEntity* entity = m_pPlayerPed;
+        if (entity)
+        {
+            entity->SetBoneScale(boneId, CVector(1.0f, 1.0f, 1.0f));
+        }
+    }
+
+    return true;
+}
+
+void CClientPed::ResetAllBoneScales()
+{
+    m_boneScales.clear();
+
+    // Reset all bones to default scale
+    if (m_pPlayerPed)
+    {
+        CEntity* entity = m_pPlayerPed;
+        if (entity)
+        {
+            CVector defaultScale(1.0f, 1.0f, 1.0f);
+            // Reset common bones
+            for (int i = BONE_ROOT; i <= BONE_HEAD; ++i)
+                entity->SetBoneScale(static_cast<eBone>(i), defaultScale);
+            for (int i = BONE_RIGHTUPPERTORSO; i <= BONE_RIGHTTHUMB; ++i)
+                entity->SetBoneScale(static_cast<eBone>(i), defaultScale);
+            for (int i = BONE_LEFTUPPERTORSO; i <= BONE_LEFTTHUMB; ++i)
+                entity->SetBoneScale(static_cast<eBone>(i), defaultScale);
+            for (int i = BONE_LEFTHIP; i <= BONE_LEFTFOOT; ++i)
+                entity->SetBoneScale(static_cast<eBone>(i), defaultScale);
+            for (int i = BONE_RIGHTHIP; i <= BONE_RIGHTFOOT; ++i)
+                entity->SetBoneScale(static_cast<eBone>(i), defaultScale);
+        }
+    }
+}
+
+void CClientPed::ApplyBoneScales()
+{
+    if (m_boneScales.empty() || !m_pPlayerPed)
+        return;
+
+    CEntity* entity = m_pPlayerPed;
+    if (!entity)
+        return;
+
+    for (const auto& pair : m_boneScales)
+    {
+        entity->SetBoneScale(pair.first, pair.second);
+    }
+}
+
 CClientVehicle* CClientPed::GetRealOccupiedVehicle()
 {
     if (m_pPlayerPed)
