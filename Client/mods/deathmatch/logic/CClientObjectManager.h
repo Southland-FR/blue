@@ -52,6 +52,12 @@ public:
     void OnCreation(CClientObject* pObject);
     void OnDestruction(CClientObject* pObject);
 
+    void SetMaxStreamedInCount(uint uiMaxStreamedIn);
+    void SetMaxLowLodStreamedInCount(uint uiMaxLowLodStreamedIn);
+    uint GetMaxStreamedInCount() const { return m_uiMaxStreamedInCount; }
+    uint GetMaxLowLodStreamedInCount() const { return m_uiMaxLowLodStreamedInCount; }
+    void RestoreStreamedInLimits();
+
 protected:
     void UpdateLimitInfo();
 
