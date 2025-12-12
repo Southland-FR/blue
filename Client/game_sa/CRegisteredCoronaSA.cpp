@@ -13,6 +13,7 @@
 #include "CCoronasSA.h"
 #include "CGameSA.h"
 #include "CRegisteredCoronaSA.h"
+#include "CCoronasLimitSA.h"
 
 extern CGameSA* pGame;
 
@@ -104,7 +105,12 @@ void CRegisteredCoronaSA::SetReflectionType(BYTE reflectionType)
 
 DWORD CRegisteredCoronaSA::GetID()
 {
-    return ((DWORD)internalInterface - ARRAY_CORONAS) / sizeof(CRegisteredCoronaSAInterface);
+    // Calculate ID based on the current corona array (which may be dynamically allocated)
+    CRegisteredCoronaSAInterface* pArrayBase = CCoronasLimitSA::GetArray();
+    if (!pArrayBase)
+        pArrayBase = reinterpret_cast<CRegisteredCoronaSAInterface*>(ARRAY_CORONAS);
+
+    return static_cast<DWORD>((reinterpret_cast<DWORD>(internalInterface) - reinterpret_cast<DWORD>(pArrayBase)) / sizeof(CRegisteredCoronaSAInterface));
 }
 
 void CRegisteredCoronaSA::Init(DWORD Identifier)

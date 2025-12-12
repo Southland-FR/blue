@@ -18,7 +18,7 @@ class CEntitySAInterface;
 
 #define ARRAY_CORONAS               0xC3E058
 
-class CRegisteredCoronaSAInterface            // coronas are 104 bytes long, and theres 56 of them
+class CRegisteredCoronaSAInterface            // Size: 0x3C (60) bytes, default array has 64 entries
 {
 public:
     CVector    Coordinates;                  // Where is it exactly.

@@ -12,25 +12,52 @@
 #include "StdInc.h"
 #include "CCoronasSA.h"
 #include "CRegisteredCoronaSA.h"
+#include "CCoronasLimitSA.h"
 
 CCoronasSA::CCoronasSA()
 {
-    for (int i = 0; i < MAX_CORONAS; i++)
-    {
-        Coronas[i] = new CRegisteredCoronaSA((CRegisteredCoronaSAInterface*)(ARRAY_CORONAS + i * sizeof(CRegisteredCoronaSAInterface)));
-    }
+    m_ucCoronaReflectionsEnabled = 1;
+    m_iCoronasLimit = MAX_CORONAS_DEFAULT;  // Will be updated by Initialize()
 }
 
 CCoronasSA::~CCoronasSA()
 {
-    for (int i = 0; i < MAX_CORONAS; i++)
+    for (auto* corona : Coronas)
     {
-        delete Coronas[i];
+        delete corona;
+    }
+    Coronas.clear();
+}
+
+void CCoronasSA::Initialize()
+{
+    // Get the current limit and array from CCoronasLimitSA
+    m_iCoronasLimit = CCoronasLimitSA::GetLimit();
+    CRegisteredCoronaSAInterface* pArray = CCoronasLimitSA::GetArray();
+
+    // If array is null, use the default GTA SA array
+    if (!pArray)
+        pArray = reinterpret_cast<CRegisteredCoronaSAInterface*>(ARRAY_CORONAS);
+
+    // Clear any existing coronas
+    for (auto* corona : Coronas)
+    {
+        delete corona;
+    }
+    Coronas.clear();
+
+    // Create wrapper objects for each corona slot
+    Coronas.reserve(m_iCoronasLimit);
+    for (int i = 0; i < m_iCoronasLimit; i++)
+    {
+        Coronas.push_back(new CRegisteredCoronaSA(&pArray[i]));
     }
 }
 
 CRegisteredCorona* CCoronasSA::GetCorona(DWORD ID)
 {
+    if (ID >= static_cast<DWORD>(m_iCoronasLimit))
+        return nullptr;
     return (CRegisteredCorona*)Coronas[ID];
 }
 
@@ -59,7 +86,8 @@ CRegisteredCorona* CCoronasSA::CreateCorona(DWORD Identifier, CVector* position)
 
 CRegisteredCorona* CCoronasSA::FindFreeCorona()
 {
-    for (int i = 2; i < MAX_CORONAS; i++)
+    // Start at 2 to skip sun/moon
+    for (int i = 2; i < m_iCoronasLimit; i++)
     {
         if (Coronas[i]->GetIdentifier() == 0)
         {
@@ -71,7 +99,7 @@ CRegisteredCorona* CCoronasSA::FindFreeCorona()
 
 CRegisteredCorona* CCoronasSA::FindCorona(DWORD Identifier)
 {
-    for (int i = 0; i < MAX_CORONAS; i++)
+    for (int i = 0; i < m_iCoronasLimit; i++)
     {
         if (Coronas[i]->GetIdentifier() == Identifier)
         {

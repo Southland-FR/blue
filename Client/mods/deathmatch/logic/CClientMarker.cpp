@@ -16,7 +16,8 @@ extern CClientGame* g_pClientGame;
 #define M_PI 3.14159265358979323846
 #endif
 
-unsigned int CClientMarker::m_uiStreamedInMarkers = 0;
+unsigned int CClientMarker::m_uiStreamedInCoronas = 0;
+unsigned int CClientMarker::m_uiStreamedIn3DMarkers = 0;
 
 CClientMarker::CClientMarker(CClientManager* pManager, ElementID ID, int iMarkerType) : ClassInit(this), CClientStreamElement(pManager->GetMarkerStreamer(), ID)
 {
@@ -386,7 +387,10 @@ bool CClientMarker::TypeToString(unsigned int uiType, SString& strOutString)
 
 bool CClientMarker::IsLimitReached()
 {
-    return m_uiStreamedInMarkers >= 32;
+    // Check if both limits are reached
+    // Coronas: 1024 (patched GTA SA limit)
+    // 3D Markers (cylinder/arrow/checkpoint/ring): 32 (GTA SA limit)
+    return m_uiStreamedInCoronas >= 1024 && m_uiStreamedIn3DMarkers >= 32;
 }
 
 void CClientMarker::StreamIn(bool bInstantly)
@@ -394,11 +398,27 @@ void CClientMarker::StreamIn(bool bInstantly)
     // Not already streamed in?
     if (!IsStreamedIn())
     {
+        // Check if we've reached the limit for this specific marker type
+        eMarkerType markerType = GetMarkerType();
+        if (markerType == MARKER_CORONA)
+        {
+            if (m_uiStreamedInCoronas >= 1024)
+                return;
+        }
+        else
+        {
+            if (m_uiStreamedIn3DMarkers >= 32)
+                return;
+        }
+
         // Stream the marker in
         m_pMarker->StreamIn();
 
-        // Increment streamed in counter
-        ++m_uiStreamedInMarkers;
+        // Increment the appropriate streamed in counter
+        if (markerType == MARKER_CORONA)
+            ++m_uiStreamedInCoronas;
+        else
+            ++m_uiStreamedIn3DMarkers;
 
         // Tell the streamer we've created this object
         NotifyCreate();
@@ -410,8 +430,12 @@ void CClientMarker::StreamOut()
     // Streamed in?
     if (IsStreamedIn())
     {
-        // Decrement streamed in counter
-        --m_uiStreamedInMarkers;
+        // Decrement the appropriate streamed in counter
+        eMarkerType markerType = GetMarkerType();
+        if (markerType == MARKER_CORONA)
+            --m_uiStreamedInCoronas;
+        else
+            --m_uiStreamedIn3DMarkers;
 
         // Stream the marker out
         m_pMarker->StreamOut();

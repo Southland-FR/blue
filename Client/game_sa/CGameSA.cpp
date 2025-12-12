@@ -61,6 +61,7 @@
 #include "CBuildingRemovalSA.h"
 #include "CCheckpointSA.h"
 #include "CPtrNodeSingleLinkPoolSA.h"
+#include "CCoronasLimitSA.h"
 
 extern CGameSA* pGame;
 
@@ -112,7 +113,14 @@ CGameSA::CGameSA()
         m_pClock = new CClockSA();
         m_pRadar = new CRadarSA();
         m_pCamera = new CCameraSA((CCameraSAInterface*)CLASS_CCamera);
+
+        // Set up corona limit before creating the coronas manager
+        // This patches GTA SA's hardcoded limit and allocates a new array
+        CCoronasLimitSA::SetLimit(MAX_CORONAS);
+
         m_pCoronas = new CCoronasSA();
+        static_cast<CCoronasSA*>(m_pCoronas)->Initialize();
+
         m_pCheckpoints = new CCheckpointsSA();
         m_pPickups = new CPickupsSA();
         m_pExplosionManager = new CExplosionManagerSA();

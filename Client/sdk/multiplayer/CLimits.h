@@ -36,4 +36,7 @@ public:
 
     virtual int  GetStreamingVehicles() const = 0;
     virtual bool SetStreamingVehicles(int) = 0;
+
+    virtual int  GetCoronas() const = 0;
+    virtual bool SetCoronas(int) = 0;
 };

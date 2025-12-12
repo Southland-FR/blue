@@ -98,7 +98,8 @@ private:
     CClientMarkerCommon*  m_pMarker;
 
     CVector             m_vecPosition;
-    static unsigned int m_uiStreamedInMarkers;
+    static unsigned int m_uiStreamedInCoronas;
+    static unsigned int m_uiStreamedIn3DMarkers;
 
     CClientColShape* m_pCollision;
 };

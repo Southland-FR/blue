@@ -13,6 +13,7 @@
 
 #include <game/Common.h>
 #include <game/CCoronas.h>
+#include <vector>
 
 class CRegisteredCorona;
 class CRegisteredCoronaSA;
@@ -20,20 +21,23 @@ struct RwTexture;
 
 #define FUNC_DoSunAndMoon           0x6FC5A0
 
-#define MAX_CORONAS                 64
 #define MAX_CORONA_TEXTURES         9
-#define ARRAY_CORONAS               0xC3E058 // also in CRegisteredCoronasSA.h
+#define ARRAY_CORONAS               0xC3E058 // Default GTA SA array, may be replaced by limit adjuster
 #define ARRAY_CORONA_TEXTURES       0xC3E000
 
 class CCoronasSA : public CCoronas
 {
 private:
-    CRegisteredCoronaSA* Coronas[MAX_CORONAS];
-    unsigned char        m_ucCoronaReflectionsEnabled;
+    std::vector<CRegisteredCoronaSA*> Coronas;
+    unsigned char                     m_ucCoronaReflectionsEnabled;
+    int                               m_iCoronasLimit;
 
 public:
     CCoronasSA();
     ~CCoronasSA();
+
+    // Initialize coronas after limit has been set
+    void Initialize();
 
     CRegisteredCorona* GetCorona(DWORD ID);
     CRegisteredCorona* CreateCorona(DWORD Identifier, CVector* position);

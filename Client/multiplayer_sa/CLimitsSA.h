@@ -38,4 +38,16 @@ public:
 
     int  GetStreamingVehicles() const;
     bool SetStreamingVehicles(int);
+
+    int  GetCoronas() const;
+    bool SetCoronas(int);
+
+    // Static accessors for corona array (used by CCoronasSA)
+    static int                                  GetCoronasLimit() { return ms_iCoronasLimit; }
+    static class CRegisteredCoronaSAInterface*  GetCoronasArray() { return ms_pCoronasArray; }
+
+private:
+    static int                         ms_iCoronasLimit;
+    static class CRegisteredCoronaSAInterface* ms_pCoronasArray;
+    static bool                        ms_bCoronasAllocated;
 };

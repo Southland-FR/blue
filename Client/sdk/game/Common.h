@@ -31,6 +31,10 @@
 #define MAX_POINTER_DOUBLE_LINKS            ( MAX_POINTER_DOUBLE_LINKS_MTA + 800 )  // 74800
 #define MAX_RWOBJECT_INSTANCES              2500
 
+// Corona limits - GTA SA default is 64, we increase to 1024
+#define MAX_CORONAS_DEFAULT                 64          // Original GTA SA limit
+#define MAX_CORONAS                         1024        // MTA increased limit
+
 /**
  * Flags used to define weapon characteristics
  */
