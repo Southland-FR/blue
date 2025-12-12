@@ -17,7 +17,7 @@
 CCoronasSA::CCoronasSA()
 {
     m_ucCoronaReflectionsEnabled = 1;
-    m_iCoronasLimit = MAX_CORONAS_DEFAULT;  // Will be updated by Initialize()
+    m_iCoronasLimit = MAX_CORONAS_DEFAULT;
 }
 
 CCoronasSA::~CCoronasSA()
@@ -31,27 +31,19 @@ CCoronasSA::~CCoronasSA()
 
 void CCoronasSA::Initialize()
 {
-    // Get the current limit and array from CCoronasLimitSA
     m_iCoronasLimit = CCoronasLimitSA::GetLimit();
     CRegisteredCoronaSAInterface* pArray = CCoronasLimitSA::GetArray();
 
-    // If array is null, use the default GTA SA array
     if (!pArray)
         pArray = reinterpret_cast<CRegisteredCoronaSAInterface*>(ARRAY_CORONAS);
 
-    // Clear any existing coronas
     for (auto* corona : Coronas)
-    {
         delete corona;
-    }
     Coronas.clear();
 
-    // Create wrapper objects for each corona slot
     Coronas.reserve(m_iCoronasLimit);
     for (int i = 0; i < m_iCoronasLimit; i++)
-    {
         Coronas.push_back(new CRegisteredCoronaSA(&pArray[i]));
-    }
 }
 
 CRegisteredCorona* CCoronasSA::GetCorona(DWORD ID)

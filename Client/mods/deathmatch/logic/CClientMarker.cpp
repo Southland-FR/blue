@@ -387,9 +387,6 @@ bool CClientMarker::TypeToString(unsigned int uiType, SString& strOutString)
 
 bool CClientMarker::IsLimitReached()
 {
-    // Check if both limits are reached
-    // Coronas: 1024 (patched GTA SA limit)
-    // 3D Markers (cylinder/arrow/checkpoint/ring): 32 (GTA SA limit)
     return m_uiStreamedInCoronas >= 1024 && m_uiStreamedIn3DMarkers >= 32;
 }
 
@@ -398,7 +395,6 @@ void CClientMarker::StreamIn(bool bInstantly)
     // Not already streamed in?
     if (!IsStreamedIn())
     {
-        // Check if we've reached the limit for this specific marker type
         eMarkerType markerType = GetMarkerType();
         if (markerType == MARKER_CORONA)
         {
@@ -411,10 +407,8 @@ void CClientMarker::StreamIn(bool bInstantly)
                 return;
         }
 
-        // Stream the marker in
         m_pMarker->StreamIn();
 
-        // Increment the appropriate streamed in counter
         if (markerType == MARKER_CORONA)
             ++m_uiStreamedInCoronas;
         else
@@ -430,14 +424,12 @@ void CClientMarker::StreamOut()
     // Streamed in?
     if (IsStreamedIn())
     {
-        // Decrement the appropriate streamed in counter
         eMarkerType markerType = GetMarkerType();
         if (markerType == MARKER_CORONA)
             --m_uiStreamedInCoronas;
         else
             --m_uiStreamedIn3DMarkers;
 
-        // Stream the marker out
         m_pMarker->StreamOut();
     }
 }

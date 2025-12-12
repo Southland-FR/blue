@@ -22,7 +22,7 @@ struct RwTexture;
 #define FUNC_DoSunAndMoon           0x6FC5A0
 
 #define MAX_CORONA_TEXTURES         9
-#define ARRAY_CORONAS               0xC3E058 // Default GTA SA array, may be replaced by limit adjuster
+#define ARRAY_CORONAS               0xC3E058
 #define ARRAY_CORONA_TEXTURES       0xC3E000
 
 class CCoronasSA : public CCoronas

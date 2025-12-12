@@ -105,7 +105,6 @@ void CRegisteredCoronaSA::SetReflectionType(BYTE reflectionType)
 
 DWORD CRegisteredCoronaSA::GetID()
 {
-    // Calculate ID based on the current corona array (which may be dynamically allocated)
     CRegisteredCoronaSAInterface* pArrayBase = CCoronasLimitSA::GetArray();
     if (!pArrayBase)
         pArrayBase = reinterpret_cast<CRegisteredCoronaSAInterface*>(ARRAY_CORONAS);
