@@ -87,6 +87,7 @@ void                InitHooks();
     void                InitHooks_DeviceSelection();
     void                InitHooks_Explosions();
     void                InitHooks_Tasks();
+    void                InitHooks_MapLimits();
     CRemoteDataStorage* CreateRemoteDataStorage();
     void                DestroyRemoteDataStorage(CRemoteDataStorage* pData);
     void                AddRemoteDataStorage(CPlayerPed* pPed, CRemoteDataStorage* pData);
