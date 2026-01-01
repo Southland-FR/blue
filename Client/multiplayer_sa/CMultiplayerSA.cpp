@@ -1595,7 +1595,6 @@ void CMultiplayerSA::InitHooks()
     InitHooks_Postprocess();
     InitHooks_Explosions();
     InitHooks_Tasks();
-    InitHooks_MapLimits();
 }
 
 // Used to store copied pointers for explosions in the FxSystem

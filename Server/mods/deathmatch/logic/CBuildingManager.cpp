@@ -13,7 +13,7 @@
 #include "CBuildingManager.h"
 #include "Utils.h"
 
-constexpr float WORLD_DISTANCE_FROM_CENTER = 6000.0f;
+constexpr float WORLD_DISTANCE_FROM_CENTER = 3000.0f;
 
 CBuildingManager::CBuildingManager()
 {
