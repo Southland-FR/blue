@@ -10,7 +10,7 @@
 
 #include "StdInc.h"
 
-constexpr float WORLD_DISTANCE_FROM_CENTER = 3000.0f;
+constexpr float WORLD_DISTANCE_FROM_CENTER = 6000.0f;
 constexpr size_t PRESERVED_POOL_SIZE = 2000;
 constexpr size_t RESIZE_POOL_STEP = 5000;
 
