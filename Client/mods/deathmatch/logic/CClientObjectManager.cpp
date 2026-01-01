@@ -333,3 +333,19 @@ bool CClientObjectManager::Exists(CClientObject* pObject)
 {
     return ListContains(m_Objects, pObject);
 }
+
+void CClientObjectManager::SetMaxStreamedInCount(uint uiMaxStreamedIn)
+{
+    m_uiMaxStreamedInCount = uiMaxStreamedIn;
+}
+
+void CClientObjectManager::SetMaxLowLodStreamedInCount(uint uiMaxLowLodStreamedIn)
+{
+    m_uiMaxLowLodStreamedInCount = uiMaxLowLodStreamedIn;
+}
+
+void CClientObjectManager::RestoreStreamedInLimits()
+{
+    m_uiMaxStreamedInCount = MAX_OBJECTS_MTA / 2;
+    m_uiMaxLowLodStreamedInCount = MAX_OBJECTS_MTA - m_uiMaxStreamedInCount;
+}

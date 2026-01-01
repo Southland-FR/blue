@@ -76,6 +76,23 @@ size_t EngineStreamingGetBufferSize() {
     return g_pGame->GetStreaming()->GetStreamingBufferSize();
 }
 
+void EngineSetObjectStreamingLimit(std::optional<uint> uiMaxStreamedIn, std::optional<uint> uiMaxLowLodStreamedIn) {
+    CClientObjectManager* pObjectManager = g_pClientGame->GetObjectManager();
+    if (uiMaxStreamedIn.has_value())
+        pObjectManager->SetMaxStreamedInCount(uiMaxStreamedIn.value());
+    if (uiMaxLowLodStreamedIn.has_value())
+        pObjectManager->SetMaxLowLodStreamedInCount(uiMaxLowLodStreamedIn.value());
+}
+
+std::tuple<uint, uint> EngineGetObjectStreamingLimit() {
+    CClientObjectManager* pObjectManager = g_pClientGame->GetObjectManager();
+    return {pObjectManager->GetMaxStreamedInCount(), pObjectManager->GetMaxLowLodStreamedInCount()};
+}
+
+void EngineRestoreObjectStreamingLimit() {
+    g_pClientGame->GetObjectManager()->RestoreStreamedInLimits();
+}
+
 void CLuaEngineDefs::LoadFunctions()
 {
     constexpr static const std::pair<const char*, lua_CFunction> functions[]{
@@ -156,8 +173,11 @@ void CLuaEngineDefs::LoadFunctions()
         {"enginePreloadWorldArea", ArgumentParser<EnginePreloadWorldArea>},
         {"engineRestreamModel", ArgumentParser<EngineRestreamModel>},
         {"engineRestream", ArgumentParser<EngineRestream>},
+        {"engineSetObjectStreamingLimit", ArgumentParser<EngineSetObjectStreamingLimit>},
+        {"engineGetObjectStreamingLimit", ArgumentParser<EngineGetObjectStreamingLimit>},
+        {"engineRestoreObjectStreamingLimit", ArgumentParser<EngineRestoreObjectStreamingLimit>},
 
-        
+
         // CLuaCFunctions::AddFunction ( "engineReplaceMatchingAtomics", EngineReplaceMatchingAtomics );
         // CLuaCFunctions::AddFunction ( "engineReplaceWheelAtomics", EngineReplaceWheelAtomics );
         // CLuaCFunctions::AddFunction ( "enginePositionAtomic", EnginePositionAtomic );
