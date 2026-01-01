@@ -1,0 +1,9 @@
+<config>
+    <text>VINEWOOD</text>
+    <position x="1411.0" y="-804.0" z="80.0" />
+
+    <!-- Letter spacing multiplier (1.2 = default, higher = more space between letters) -->
+    <spacing>0.6</spacing>
+
+    <drawDistance>500</drawDistance>
+</config>
