@@ -292,6 +292,10 @@ void CClientSoundManager::UpdateVolume()
         if (g_pCore->GetCVars()->Get("mtavolume", fValue))
         {
             fValue *= fMasterVolume;
+
+            if (fValue * 10000 == BASS_GetConfig(BASS_CONFIG_GVOL_STREAM))
+                return;
+
             fValue = std::max(0.0f, std::min(1.0f, fValue));
         }
         else
@@ -300,17 +304,8 @@ void CClientSoundManager::UpdateVolume()
         }
     }
 
-    // Skip update if volume hasn't changed
-    DWORD dwNewVolume = static_cast<DWORD>(fValue * 10000);
-    if (dwNewVolume == BASS_GetConfig(BASS_CONFIG_GVOL_STREAM))
-        return;
-
-    BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, dwNewVolume);
-    BASS_SetConfig(BASS_CONFIG_GVOL_MUSIC, dwNewVolume);
-
-    // Also apply volume to CEF browsers so they respect MTA volume settings
-    if (g_pCore->IsWebCoreLoaded())
-        g_pCore->GetWebCore()->SetGlobalAudioVolume(fValue);
+    BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, static_cast<DWORD>(fValue * 10000));
+    BASS_SetConfig(BASS_CONFIG_GVOL_MUSIC, static_cast<DWORD>(fValue * 10000));
 }
 
 //
